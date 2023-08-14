@@ -1,5 +1,6 @@
 package com.choi.doit.domain.model;
 
+import com.choi.doit.domain.user.dto.request.EmailJoinRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,15 +26,15 @@ public class UserEntity {
     @CreationTimestamp
     private LocalDateTime created_at;
 
-    public UserEntity(String email, String nickname, String password, String profile_image_path) {
-        isGuest = false;
-        this.email = email;
-        this.nickname = nickname;
-        this.password = password;
-        this.profile_image_path = profile_image_path;
-    }
-
     public UserEntity() {
         isGuest = true;
+    }
+
+    public UserEntity(EmailJoinRequestDto emailJoinRequestDto, String profile_image_path) {
+        isGuest = false;
+        this.email = emailJoinRequestDto.getEmail();
+        this.nickname = emailJoinRequestDto.getNickname();
+        this.password = emailJoinRequestDto.getPassword();
+        this.profile_image_path = profile_image_path;
     }
 }
