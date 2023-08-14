@@ -6,11 +6,13 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum UserErrorCode implements ErrorCode {
-    UNAUTHORIZED_EMAIL(HttpStatus.UNAUTHORIZED, "Email authorization required."),
+    INVALID_TYPE(HttpStatus.BAD_REQUEST, "Invalid type."),
+    UNAUTHENTICATED_EMAIL(HttpStatus.UNAUTHORIZED, "Email authentication required."),
     INVALID_CODE(HttpStatus.UNAUTHORIZED, "Invalid code."),
     INVALID_EMAIL(HttpStatus.UNAUTHORIZED, "Invalid email."),
     INVALID_LINK(HttpStatus.UNAUTHORIZED, "Invalid link."),
-    EMAIL_ALREADY_AUTHORIZED(HttpStatus.FORBIDDEN, "Email already authorized."),
+    EMAIL_ALREADY_AUTHENTICATED(HttpStatus.FORBIDDEN, "Email already authenticated."),
+    DUPLICATED_NICKNAME(HttpStatus.BAD_REQUEST, "Nickname already exists."),
     DUPLICATED_EMAIL(HttpStatus.BAD_REQUEST, "Email already exists.");
 
     private final HttpStatus httpStatus;
