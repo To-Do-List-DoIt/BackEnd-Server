@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum UserErrorCode implements ErrorCode {
+    LOGIN_FAILED(HttpStatus.UNAUTHORIZED, "Login failed."),
     INVALID_TYPE(HttpStatus.BAD_REQUEST, "Invalid type."),
     UNAUTHENTICATED_EMAIL(HttpStatus.UNAUTHORIZED, "Email authentication required."),
     INVALID_CODE(HttpStatus.UNAUTHORIZED, "Invalid code."),
