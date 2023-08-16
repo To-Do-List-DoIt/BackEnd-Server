@@ -3,6 +3,7 @@ package com.choi.doit.domain.user.application;
 import com.choi.doit.domain.model.UserEntity;
 import com.choi.doit.domain.user.dao.UserRepository;
 import com.choi.doit.domain.user.domain.EmailAuthKeyEnum;
+import com.choi.doit.domain.user.domain.Role;
 import com.choi.doit.domain.user.dto.request.*;
 import com.choi.doit.domain.user.dto.response.EmailAuthInfoResponseDto;
 import com.choi.doit.domain.user.dto.response.EmailAuthResponseDto;
@@ -12,6 +13,8 @@ import com.choi.doit.domain.user.vo.EmailVo;
 import com.choi.doit.domain.user.vo.NicknameVo;
 import com.choi.doit.global.error.exception.RestApiException;
 import com.choi.doit.global.util.*;
+import com.choi.doit.global.util.jwt.JwtUtil;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,8 +40,9 @@ public class EmailJoinService {
     private final DuplicateCheckHandler duplicateCheckHandler;
     private final MailUtil mailUtil;
     private final RedisUtil redisUtil;
+    private final JwtUtil jwtUtil;
     private final SpringTemplateEngine springTemplateEngine;
-    private final RandomCodeGenerator randomCodeGenerator;
+    private final RandomUtil randomUtil;
     private final RedisTemplate<String, Object> redisTemplate;
     private final ImageHandler imageHandler;
     private final PasswordEncoder passwordEncoder;
@@ -76,7 +80,7 @@ public class EmailJoinService {
     }
 
     // Redis 인증 정보 저장
-    private void saveMailAuthInfo(String email, String code, boolean isAuth) {
+    public void saveMailAuthInfo(String email, String code, boolean isAuth) {
         Map<String, Object> value = new HashMap<>();
         value.put(EmailAuthKeyEnum.CODE.getKey(), code);
         value.put(EmailAuthKeyEnum.IS_AUTHENTICATED.getKey(), isAuth);
@@ -92,7 +96,7 @@ public class EmailJoinService {
 
         // 인증 링크 발송
         String MAIL_SUBJECT = "[DO-IT] 이메일 인증";
-        String code = randomCodeGenerator.getRandomCode(8);
+        String code = randomUtil.getRandomCode(8);
         String link = AUTH_LINK_BASE_URL + "?email=" + email + "&code=" + code;
         mailUtil.sendMail(email, MAIL_SUBJECT, setContext(link));
 
@@ -137,8 +141,31 @@ public class EmailJoinService {
         return (new EmailAuthInfoResponseDto(email, isAuthenticated(email)));
     }
 
+    @Transactional
+    public Long setGuestInfo(UserEntity user, EmailJoinRequestDto dto, String profile_path) {
+        Long user_id = user.getId();
+        String email = dto.getEmail();
+        String password = dto.getPassword();
+        String nickname = dto.getNickname();
+
+        userRepository.updateRole(Role.MEMBER, user_id);
+        userRepository.updateEmail(email, user_id);
+        userRepository.updateNickname(nickname, user_id);
+        userRepository.updatePassword(password, user_id);
+        userRepository.updateProfileImagePath(profile_path, user_id);
+
+        return user_id;
+    }
+
     // 이메일 가입
-    public EmailJoinResponseDto join(EmailJoinRequestDto emailJoinRequestDto) throws IOException {
+    public EmailJoinResponseDto join(String authorization, EmailJoinRequestDto emailJoinRequestDto) throws IOException {
+        UserEntity user = null;
+
+        // 게스트 회원이 정회원 전환하는 경우
+        if (authorization != null) {
+            user = jwtUtil.validateAccessToken(authorization);
+        }
+
         String email = emailJoinRequestDto.getEmail();
         String password = emailJoinRequestDto.getPassword();
         String nickname = emailJoinRequestDto.getNickname();
@@ -156,17 +183,17 @@ public class EmailJoinService {
         duplicateCheckHandler.isDupNickname(nickname);
 
         // 프로필 이미지 저장
-        if (!image.isEmpty())
+        if (image != null)
             profile_path = imageHandler.saveProfileImage(email, image);
 
         // 비밀번호 암호화
         emailJoinRequestDto.setPassword(passwordEncoder.encode(password));
 
-        // 유저 객체 생성
-        UserEntity user = emailJoinRequestDto.toEntity(profile_path);
-
         // 유저 데이터 저장
-        return new EmailJoinResponseDto(userRepository.save(user).getId());
+        if (user == null)
+            return new EmailJoinResponseDto(userRepository.save(emailJoinRequestDto.toEntity(profile_path)).getId());
+        else
+            return new EmailJoinResponseDto(setGuestInfo(user, emailJoinRequestDto, profile_path));
     }
 
     public void checkDuplicate(DuplicateCheckRequestDto dto) throws RestApiException {
