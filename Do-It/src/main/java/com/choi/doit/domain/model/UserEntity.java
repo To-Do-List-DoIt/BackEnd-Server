@@ -1,13 +1,18 @@
 package com.choi.doit.domain.model;
 
+import com.choi.doit.domain.user.domain.Provider;
+import com.choi.doit.domain.user.domain.Role;
 import com.choi.doit.domain.user.dto.request.EmailJoinRequestDto;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
+@NoArgsConstructor
 @Entity
 @Getter
 @Setter
@@ -16,25 +21,36 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Boolean isGuest;
     private String email;
     private String nickname;
     private String password;
-    private String provider;
     @Column(columnDefinition = "TEXT")
     private String profile_image_path;
     @CreationTimestamp
     private LocalDateTime created_at;
+    @Enumerated(EnumType.STRING)
+    private Role role;
+    @Enumerated(EnumType.STRING)
+    private Provider provider;
 
-    public UserEntity() {
-        isGuest = true;
+    public UserEntity(String nickname) {
+        role = Role.GUEST;
+        this.nickname = nickname;
     }
 
     public UserEntity(EmailJoinRequestDto emailJoinRequestDto, String profile_image_path) {
-        isGuest = false;
+        role = Role.MEMBER;
         this.email = emailJoinRequestDto.getEmail();
         this.nickname = emailJoinRequestDto.getNickname();
         this.password = emailJoinRequestDto.getPassword();
+        this.profile_image_path = profile_image_path;
+    }
+
+    @Builder
+    public UserEntity(Provider provider, String email, String nickname, String profile_image_path) {
+        role = Role.MEMBER;
+        this.provider = provider;
+        this.email = email;
         this.profile_image_path = profile_image_path;
     }
 }
