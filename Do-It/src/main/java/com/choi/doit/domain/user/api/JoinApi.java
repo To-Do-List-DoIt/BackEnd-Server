@@ -69,7 +69,7 @@ public class JoinApi {
     }
 
     // 이메일, 닉네임 중복확인
-    @GetMapping("/check")
+    @GetMapping("/sign-up/check")
     public ResponseEntity<ResponseDto> checkDuplicate(DuplicateCheckRequestDto dto) {
         emailJoinService.checkDuplicate(dto);
 
