@@ -79,7 +79,7 @@ public class JwtUtil {
     }
 
     // Decode Bearer
-    private String decodeBearer(String bearer_token) {
+    public String decodeBearer(String bearer_token) {
         return Arrays.stream(bearer_token.split(BEARER)).toList().get(1);
     }
 
@@ -98,7 +98,7 @@ public class JwtUtil {
         Map<String, Object> payloads = validateJwt(access_token);
 
         // user 정보 존재 여부 검사
-        UserEntity user = userRepository.findById((Long) payloads.get("user_id"))
+        UserEntity user = userRepository.findById(((Number) payloads.get("user_id")).longValue())
                 .orElseThrow(() -> new RestApiException(GlobalErrorCode.USER_NOT_FOUND));
 
         // refresh token 존재 여부 검사
@@ -115,7 +115,7 @@ public class JwtUtil {
         Map<String, Object> payloads = validateJwt(refresh_token);
 
         // user 정보 존재 여부 검사
-        UserEntity user = userRepository.findById((Long) payloads.get("user_id"))
+        UserEntity user = userRepository.findById(((Number) payloads.get("user_id")).longValue())
                 .orElseThrow(() -> new RestApiException(GlobalErrorCode.USER_NOT_FOUND));
 
         // refresh token 존재 여부 검사

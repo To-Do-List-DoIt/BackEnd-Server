@@ -38,7 +38,7 @@ public class RandomUtil {
         return String.valueOf(stringBuilder);
     }
 
-    public String getRandomNickname() {
+    public String getRandomUsername() {
         String uuid = UUID.randomUUID().toString().replace("-", "");
 
         return "User" + uuid;

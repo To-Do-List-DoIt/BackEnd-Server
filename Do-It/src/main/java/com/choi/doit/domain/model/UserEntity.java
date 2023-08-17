@@ -33,9 +33,10 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     private Provider provider;
 
-    public UserEntity(String nickname) {
+    public UserEntity(String email, String password) {
         role = Role.GUEST;
-        this.nickname = nickname;
+        this.email = email;
+        this.password = password;
     }
 
     public UserEntity(EmailJoinRequestDto emailJoinRequestDto, String profile_image_path) {
@@ -46,8 +47,9 @@ public class UserEntity {
         this.profile_image_path = profile_image_path;
     }
 
+    // For oauth2 user
     @Builder
-    public UserEntity(Provider provider, String email, String nickname, String profile_image_path) {
+    public UserEntity(Provider provider, String email, String profile_image_path) {
         role = Role.MEMBER;
         this.provider = provider;
         this.email = email;

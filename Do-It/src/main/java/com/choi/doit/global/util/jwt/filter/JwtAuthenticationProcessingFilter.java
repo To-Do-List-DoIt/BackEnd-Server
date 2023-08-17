@@ -7,6 +7,7 @@ import com.choi.doit.global.error.exception.SpringSecurityException;
 import com.choi.doit.global.util.RandomUtil;
 import com.choi.doit.global.util.ResponseUtil;
 import com.choi.doit.global.util.jwt.JwtUtil;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -46,8 +47,8 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     - Refresh token 미존재 -> 유저 정보 저장, filtering 재개
     */
     @Override
-    protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws RestApiException, SpringSecurityException, ServletException, IOException {
-        if (request.getRequestURI().contains("/login") || request.getRequestURI().contains("/sign-up")) {
+    protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws RestApiException, SpringSecurityException, ServletException, IOException, ExpiredJwtException {
+        if (request.getRequestURI().contains("/login") || request.getRequestURI().contains("/sign-up") || request.getRequestURI().equals("/user/guest")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -94,6 +95,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                 password,
                 authoritiesMapper.mapAuthorities(userDetails.getAuthorities()));
 
+        // context 초기화 후 인증 정보 저장
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
