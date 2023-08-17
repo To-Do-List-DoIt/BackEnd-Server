@@ -1,4 +1,4 @@
-package com.choi.doit.global.error;
+package com.choi.doit.global.error.handler;
 
 import com.choi.doit.global.util.ResponseUtil;
 import jakarta.servlet.ServletException;

@@ -1,6 +1,9 @@
-package com.choi.doit.global.login.filter;
+package com.choi.doit.domain.user.application.filter;
 
+import com.choi.doit.domain.model.UserEntity;
+import com.choi.doit.domain.user.application.LoginService;
 import com.choi.doit.domain.user.dto.request.EmailLoginRequestDto;
+import com.choi.doit.global.error.GlobalErrorCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,6 +19,7 @@ import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
 
 @Slf4j
 public class JsonEmailPasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
@@ -24,10 +28,12 @@ public class JsonEmailPasswordAuthenticationFilter extends AbstractAuthenticatio
     private static final AntPathRequestMatcher DEFAULT_LOGIN_PATH_REQUEST_MATCHER =
             new AntPathRequestMatcher(DEFAULT_LOGIN_REQUEST_URL, HTTP_METHOD); // "/login" + POST로 온 요청에 매칭된다.
     private final ObjectMapper objectMapper;
+    private final LoginService loginService;
 
-    public JsonEmailPasswordAuthenticationFilter(ObjectMapper objectMapper) {
+    public JsonEmailPasswordAuthenticationFilter(ObjectMapper objectMapper, LoginService loginService) {
         super("/user/login/**");
         this.objectMapper = objectMapper;
+        this.loginService = loginService;
     }
 
     // 로그인 요청 처리
@@ -37,13 +43,32 @@ public class JsonEmailPasswordAuthenticationFilter extends AbstractAuthenticatio
             throw new AuthenticationServiceException("Authentication method '" + request.getMethod() + "' not supported.");
         }
 
-        String messageBody = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);
+        String email, password;
 
-        @Valid
-        EmailLoginRequestDto dto = objectMapper.readValue(messageBody, EmailLoginRequestDto.class);
+        if (request.getRequestURI().contains("google")) {
+            // google oauth
+            String id_token = loginService.getIdToken(request);
 
-        String email = dto.getEmail();
-        String password = dto.getPassword();
+            try {
+                UserEntity googleUser = loginService.googleAuth(null, id_token);
+
+                email = googleUser.getEmail();
+                password = googleUser.getPassword();
+            } catch (GeneralSecurityException e) {
+                throw new AuthenticationServiceException(GlobalErrorCode.AUTHENTICATION_FAILED.getMessage());
+            }
+            //} else if (request.getRequestURI().contains("apple")) {
+            // apple oauth
+        } else {
+            // 이메일 가입자
+            String messageBody = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);
+
+            @Valid
+            EmailLoginRequestDto dto = objectMapper.readValue(messageBody, EmailLoginRequestDto.class);
+
+            email = dto.getEmail();
+            password = dto.getPassword();
+        }
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
 

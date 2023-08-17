@@ -1,4 +1,4 @@
-package com.choi.doit.global.login.application;
+package com.choi.doit.domain.user.application;
 
 import com.choi.doit.domain.model.UserEntity;
 import com.choi.doit.domain.user.dao.UserRepository;
