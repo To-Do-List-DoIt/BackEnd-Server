@@ -13,11 +13,13 @@ import io.jsonwebtoken.Header;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.util.*;
 
+import static com.choi.doit.global.error.GlobalErrorCode.TOKEN_REQUIRED;
 import static io.jsonwebtoken.Jwts.builder;
 import static io.jsonwebtoken.Jwts.parser;
 
@@ -84,12 +86,16 @@ public class JwtUtil {
     }
 
     // Decode request
-    public Optional<String> decodeHeader(boolean isAccessToken, HttpServletRequest request) {
+    public String decodeHeader(boolean isAccessToken, HttpServletRequest request) {
         String header = isAccessToken ? ACCESS_HEADER : REFRESH_HEADER;
 
-        return Optional.ofNullable(request.getHeader(header))
-                .filter(token -> token.startsWith(BEARER))
-                .map(token -> token.replace(BEARER, ""));
+        String header_value = request.getHeader(header);
+        if (isAccessToken && header_value == null)
+            throw new AuthenticationServiceException(TOKEN_REQUIRED.getMessage());
+        else if (header_value == null)
+            return null;
+
+        return decodeBearer(header_value);
     }
 
     // Validate access token
