@@ -1,7 +1,6 @@
 package com.choi.doit.global.util.jwt.filter;
 
 import com.choi.doit.domain.model.UserEntity;
-import com.choi.doit.domain.user.application.LoginService;
 import com.choi.doit.domain.user.dto.response.LoginResponseDto;
 import com.choi.doit.global.error.exception.RestApiException;
 import com.choi.doit.global.error.exception.SpringSecurityException;
@@ -34,7 +33,6 @@ import java.util.Arrays;
 public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final ResponseUtil responseUtil;
-    private final LoginService loginService;
     private final GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
     private final String ACCESS_HEADER = "Authorization";
 
