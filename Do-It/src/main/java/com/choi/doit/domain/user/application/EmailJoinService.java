@@ -37,7 +37,7 @@ public class EmailJoinService {
     @Value("${LINK_BASE_URL}")
     private String AUTH_LINK_BASE_URL;
 
-    private final DuplicateCheckHandler duplicateCheckHandler;
+    private final DuplicateCheckUtil duplicateCheckUtil;
     private final MailUtil mailUtil;
     private final RedisUtil redisUtil;
     private final JwtUtil jwtUtil;
@@ -47,6 +47,22 @@ public class EmailJoinService {
     private final ImageHandler imageHandler;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+
+    @Transactional
+    public Long setGuestInfo(UserEntity user, EmailJoinRequestDto dto, String profile_path) {
+        Long user_id = user.getId();
+        String email = dto.getEmail();
+        String password = dto.getPassword();
+        String nickname = dto.getNickname();
+
+        userRepository.updateRole(Role.MEMBER, user_id);
+        userRepository.updateEmail(email, user_id);
+        userRepository.updateNickname(nickname, user_id);
+        userRepository.updatePassword(password, user_id);
+        userRepository.updateProfileImagePath(profile_path, user_id);
+
+        return user_id;
+    }
 
     // 인증 여부 검사
     public boolean isAuthenticated(String email) {
@@ -92,7 +108,7 @@ public class EmailJoinService {
         String email = emailRequestDto.getEmail();
 
         // 이메일 중복 체크
-        duplicateCheckHandler.isDupEmail(email);
+        duplicateCheckUtil.isDupEmail(email);
 
         // 인증 링크 발송
         String MAIL_SUBJECT = "[DO-IT] 이메일 인증";
@@ -141,30 +157,11 @@ public class EmailJoinService {
         return (new EmailAuthInfoResponseDto(email, isAuthenticated(email)));
     }
 
-    @Transactional
-    public Long setGuestInfo(UserEntity user, EmailJoinRequestDto dto, String profile_path) {
-        Long user_id = user.getId();
-        String email = dto.getEmail();
-        String password = dto.getPassword();
-        String nickname = dto.getNickname();
-
-        userRepository.updateRole(Role.MEMBER, user_id);
-        userRepository.updateEmail(email, user_id);
-        userRepository.updateNickname(nickname, user_id);
-        userRepository.updatePassword(password, user_id);
-        userRepository.updateProfileImagePath(profile_path, user_id);
-
-        return user_id;
-    }
-
     // 이메일 가입
     public EmailJoinResponseDto join(String authorization, EmailJoinRequestDto emailJoinRequestDto) throws IOException {
         UserEntity user = null;
-
-        // 게스트 회원이 정회원 전환하는 경우
-        if (authorization != null) {
+        if (authorization != null)
             user = jwtUtil.validateAccessToken(authorization);
-        }
 
         String email = emailJoinRequestDto.getEmail();
         String password = emailJoinRequestDto.getPassword();
@@ -177,10 +174,10 @@ public class EmailJoinService {
             throw new RestApiException(UserErrorCode.UNAUTHENTICATED_EMAIL);
 
         // 이메일 중복 검사
-        duplicateCheckHandler.isDupEmail(email);
+        duplicateCheckUtil.isDupEmail(email);
 
         // 닉네임 중복 검사
-        duplicateCheckHandler.isDupNickname(nickname);
+        duplicateCheckUtil.isDupNickname(nickname);
 
         // 프로필 이미지 저장
         if (image != null)
@@ -199,12 +196,13 @@ public class EmailJoinService {
     public void checkDuplicate(DuplicateCheckRequestDto dto) throws RestApiException {
         String type = dto.getType();
         String value = dto.getValue();
+
         if (type.equals("email")) {
             EmailVo vo = new EmailVo(value);
-            duplicateCheckHandler.isDupEmail(vo);
+            duplicateCheckUtil.isDupEmail(vo);
         } else if (type.equals("nickname")) {
             NicknameVo vo = new NicknameVo(value);
-            duplicateCheckHandler.isDupNickname(vo);
+            duplicateCheckUtil.isDupNickname(vo);
         } else {
             throw new RestApiException(UserErrorCode.INVALID_TYPE);
         }
