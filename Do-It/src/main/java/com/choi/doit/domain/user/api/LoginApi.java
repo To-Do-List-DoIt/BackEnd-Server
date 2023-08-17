@@ -25,10 +25,6 @@ public class LoginApi {
         return ResponseEntity.status(201).body(DataResponseDto.of(loginResponseDto, 201));
     }
 
-    // 소셜 로그인 - 구글
-
-    // 소셜 로그인 - 애플
-
     // 로그아웃
     @DeleteMapping("/logout")
     public ResponseEntity<ResponseDto> logout(@RequestHeader @Value("Authorization") String authorization) {
