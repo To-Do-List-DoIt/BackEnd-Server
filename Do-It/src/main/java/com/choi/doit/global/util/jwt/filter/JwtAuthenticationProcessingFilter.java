@@ -1,6 +1,7 @@
 package com.choi.doit.global.util.jwt.filter;
 
 import com.choi.doit.domain.model.UserEntity;
+import com.choi.doit.domain.user.application.LoginService;
 import com.choi.doit.domain.user.dto.response.LoginResponseDto;
 import com.choi.doit.global.error.exception.RestApiException;
 import com.choi.doit.global.error.exception.SpringSecurityException;
@@ -28,14 +29,14 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Arrays;
 
-import static com.choi.doit.global.error.GlobalErrorCode.TOKEN_REQUIRED;
-
 @RequiredArgsConstructor
 @Slf4j
 public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final ResponseUtil responseUtil;
+    private final LoginService loginService;
     private final GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
+    private final String ACCESS_HEADER = "Authorization";
 
     // Decode Bearer
     private String decodeBearer(String bearer_token) {
@@ -48,16 +49,18 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws RestApiException, SpringSecurityException, ServletException, IOException, ExpiredJwtException {
-        if (request.getRequestURI().contains("/login") || request.getRequestURI().contains("/sign-up") || request.getRequestURI().equals("/user/guest")) {
+        // uri 검사하여 필터 통과 여부 결정
+        String uri = request.getRequestURI();
+        if (uri.contains("/login") || uri.contains("/sign-up") || uri.equals("/user/guest")) {
             filterChain.doFilter(request, response);
             return;
         }
 
         // refresh token 검증
-        String refresh_token = jwtUtil.decodeHeader(false, request).orElse(null);
+        String refresh_token = jwtUtil.decodeHeader(false, request);
 
         // refresh token을 헤더에 가지고 있는 경우 token 재발급
-        if (refresh_token != null) {
+        if (request.getRequestURI().equals("/user/token") && refresh_token != null) {
             UserEntity user = jwtUtil.validateRefreshToken(refresh_token);
             LoginResponseDto dto = jwtUtil.generateTokens(user);
 
@@ -67,10 +70,9 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         }
 
         // refresh token을 헤더에 가지고 있지 않은 경우 access token 검증
-        String access_token = jwtUtil.decodeHeader(true, request)
-                .orElseThrow(() -> new SpringSecurityException(TOKEN_REQUIRED));
-
+        String access_token = jwtUtil.decodeHeader(true, request);
         UserEntity user = jwtUtil.validateAccessToken(access_token);
+
         saveAuthentication(user);
 
         filterChain.doFilter(request, response);
@@ -81,7 +83,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         if (password == null) {
             // 소셜 로그인 유저
             RandomUtil randomUtil = new RandomUtil();
-            password = randomUtil.getRandomPassword(12);
+            password = randomUtil.getRandomPassword(15, true);
         }
 
         UserDetails userDetails = User.builder()
