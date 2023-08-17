@@ -1,6 +1,7 @@
 package com.choi.doit.global.config;
 
 import com.choi.doit.domain.user.dao.UserRepository;
+import com.choi.doit.global.error.ExceptionHandlerFilter;
 import com.choi.doit.global.login.application.LoginDetailsService;
 import com.choi.doit.global.login.filter.JsonEmailPasswordAuthenticationFilter;
 import com.choi.doit.global.login.handler.LoginFailureHandler;
@@ -44,11 +45,12 @@ public class SecurityConfig {
                 .sessionManagement((sessionManagement) ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorizeRequests) ->
-                        authorizeRequests.requestMatchers("/user/sign-up/**", "/user/login/**").permitAll()
+                        authorizeRequests.requestMatchers("/user/sign-up/**", "/user/login/**", "/user/guest").permitAll()
                                 .anyRequest().authenticated());
 
         http.addFilterAfter(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class);
         http.addFilterBefore(jwtAuthenticationProcessingFilter(), JsonEmailPasswordAuthenticationFilter.class);
+        http.addFilterBefore(new ExceptionHandlerFilter(responseUtil), JwtAuthenticationProcessingFilter.class);
 
         return http.build();
     }
