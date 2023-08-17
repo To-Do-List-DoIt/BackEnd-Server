@@ -49,10 +49,11 @@ public class UserEntity {
 
     // For oauth2 user
     @Builder
-    public UserEntity(Provider provider, String email, String profile_image_path) {
+    public UserEntity(Provider provider, String email, String password, String nickname) {
         role = Role.MEMBER;
         this.provider = provider;
         this.email = email;
-        this.profile_image_path = profile_image_path;
+        this.password = password;
+        this.nickname = nickname;
     }
 }
