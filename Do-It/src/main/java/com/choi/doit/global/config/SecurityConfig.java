@@ -1,11 +1,12 @@
 package com.choi.doit.global.config;
 
+import com.choi.doit.domain.user.application.LoginDetailsService;
+import com.choi.doit.domain.user.application.LoginService;
+import com.choi.doit.domain.user.application.filter.JsonEmailPasswordAuthenticationFilter;
+import com.choi.doit.domain.user.application.handler.LoginFailureHandler;
+import com.choi.doit.domain.user.application.handler.LoginSuccessHandler;
 import com.choi.doit.domain.user.dao.UserRepository;
-import com.choi.doit.global.error.ExceptionHandlerFilter;
-import com.choi.doit.global.login.application.LoginDetailsService;
-import com.choi.doit.global.login.filter.JsonEmailPasswordAuthenticationFilter;
-import com.choi.doit.global.login.handler.LoginFailureHandler;
-import com.choi.doit.global.login.handler.LoginSuccessHandler;
+import com.choi.doit.global.error.handler.ExceptionHandlerFilter;
 import com.choi.doit.global.util.ResponseUtil;
 import com.choi.doit.global.util.jwt.JwtUtil;
 import com.choi.doit.global.util.jwt.filter.JwtAuthenticationProcessingFilter;
@@ -30,6 +31,7 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 @Configuration
 public class SecurityConfig {
     private final LoginDetailsService loginDetailsService;
+    private final LoginService loginService;
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
@@ -81,7 +83,7 @@ public class SecurityConfig {
     @Bean
     public JsonEmailPasswordAuthenticationFilter customJsonUsernamePasswordAuthenticationFilter() {
         JsonEmailPasswordAuthenticationFilter customJsonUsernamePasswordLoginFilter
-                = new JsonEmailPasswordAuthenticationFilter(objectMapper);
+                = new JsonEmailPasswordAuthenticationFilter(objectMapper, loginService);
         customJsonUsernamePasswordLoginFilter.setAuthenticationManager(authenticationManager());
         customJsonUsernamePasswordLoginFilter.setAuthenticationSuccessHandler(loginSuccessHandler());
         customJsonUsernamePasswordLoginFilter.setAuthenticationFailureHandler(loginFailureHandler());
@@ -90,6 +92,6 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() {
-        return new JwtAuthenticationProcessingFilter(jwtUtil, responseUtil);
+        return new JwtAuthenticationProcessingFilter(jwtUtil, responseUtil, loginService);
     }
 }
