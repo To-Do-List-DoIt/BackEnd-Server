@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class DuplicateCheckHandler {
+public class DuplicateCheckUtil {
     private final UserRepository userRepository;
 
     public void isDupEmail(String email) throws RestApiException {
