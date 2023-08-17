@@ -2,59 +2,105 @@ package com.choi.doit.domain.user.application;
 
 import com.choi.doit.domain.model.UserEntity;
 import com.choi.doit.domain.user.dao.UserRepository;
+import com.choi.doit.domain.user.domain.Provider;
+import com.choi.doit.domain.user.domain.Role;
 import com.choi.doit.domain.user.dto.response.LoginResponseDto;
+import com.choi.doit.domain.user.exception.UserErrorCode;
+import com.choi.doit.domain.user.vo.OAuthUserInfoDto;
 import com.choi.doit.global.error.exception.RestApiException;
+import com.choi.doit.global.oauth2.GoogleOAuth;
 import com.choi.doit.global.util.RandomUtil;
 import com.choi.doit.global.util.RedisUtil;
 import com.choi.doit.global.util.SecurityContextUtil;
 import com.choi.doit.global.util.jwt.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.util.Arrays;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class LoginService {
-    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final RandomUtil randomUtil;
     private final JwtUtil jwtUtil;
     private final RedisUtil redisUtil;
     private final SecurityContextUtil securityContextUtil;
+    private final GoogleOAuth googleOAuth;
+
+    public String getIdToken(HttpServletRequest request) throws AuthenticationServiceException {
+        String id_token = Arrays.stream(request.getQueryString().split("id-token=")).toList().get(1);
+        if (id_token == null) {
+            throw new AuthenticationServiceException(UserErrorCode.INVALID_ID_TOKEN.getMessage());
+        }
+
+        return id_token;
+    }
+
+    @Transactional
+    public UserEntity setGuestOAuthInfo(UserEntity user, OAuthUserInfoDto dto) {
+        Long user_id = user.getId();
+
+        userRepository.updateRole(Role.MEMBER, user_id);
+        userRepository.updateEmail(dto.getEmail(), user_id);
+        userRepository.updateNickname(dto.getNickname(), user_id);
+        userRepository.updatePassword(dto.getPassword(), user_id);
+
+        return userRepository.findByEmail(dto.getEmail()).orElse(null);
+    }
 
     // 게스트 로그인
     public LoginResponseDto guestLogin() {
         // 랜덤 이메일 생성
         String email = randomUtil.getRandomUsername();
-        String password = randomUtil.getRandomPassword(15);
+        String password = randomUtil.getRandomPassword(15, true);
 
         // 데이터 등록
-        UserEntity user = userRepository.save(new UserEntity(email, passwordEncoder.encode(password)));
+        UserEntity user = userRepository.save(new UserEntity(email, password));
 
         return jwtUtil.generateTokens(user);
     }
 
-    /*
-    // 이메일 로그인
-    public LoginResponseDto emailLogin(EmailLoginRequestDto dto) throws RestApiException {
+    // 구글 로그인
+    public UserEntity googleAuth(String authorization, String id_token) throws GeneralSecurityException, IOException {
+        UserEntity user = null;
+        if (authorization != null)
+            user = jwtUtil.validateAccessToken(authorization);
+
+        OAuthUserInfoDto dto = googleOAuth.authenticate(id_token);
+
+        // google 서버에서 받아온 값
+        Provider provider = dto.getProvider();
         String email = dto.getEmail();
-        String password = dto.getPassword();
 
-        // Email 존재 여부
-        UserEntity user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RestApiException(UserErrorCode.LOGIN_FAILED));
+        // 랜덤 값 생성
+        String nickname = randomUtil.getRandomUsername();
+        String password = randomUtil.getRandomPassword(15, true);
 
-        // 비밀번호 일치 여부
-        if (!passwordEncoder.matches(password, user.getPassword()))
-            throw new RestApiException(UserErrorCode.LOGIN_FAILED);
+        // 회원 데이터 조회, 새 회원이면 데이터 생성
+        if (user == null) {
+            return userRepository.findByEmail(email)
+                    .orElseGet(() -> userRepository.save(UserEntity.builder()
+                            .email(email)
+                            .password(password)
+                            .nickname(nickname)
+                            .provider(provider)
+                            .build()));
+        } else {
+            dto.setNickname(nickname);
+            dto.setPassword(password);
 
-        // 토큰 발급
-        return jwtUtil.generateTokens(user);
+            return setGuestOAuthInfo(user, dto);
+        }
     }
-     */
 
     // 로그아웃
     public void logout() throws RestApiException {
