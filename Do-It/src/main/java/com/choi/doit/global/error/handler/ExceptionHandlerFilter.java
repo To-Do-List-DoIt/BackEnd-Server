@@ -1,5 +1,6 @@
-package com.choi.doit.global.error;
+package com.choi.doit.global.error.handler;
 
+import com.choi.doit.global.error.GlobalErrorCode;
 import com.choi.doit.global.error.exception.RestApiException;
 import com.choi.doit.global.error.exception.SpringSecurityException;
 import com.choi.doit.global.util.ResponseUtil;
@@ -11,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -32,6 +34,8 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
             responseUtil.setResponse(response, e.getErrorCode().getHttpStatus().value(), e.getMessage());
         } catch (SpringSecurityException e) {
             responseUtil.setResponse(response, e.getErrorCode().getHttpStatus().value(), e.getMessage());
+        } catch (AuthenticationServiceException e) {
+            responseUtil.setResponse(response, HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
