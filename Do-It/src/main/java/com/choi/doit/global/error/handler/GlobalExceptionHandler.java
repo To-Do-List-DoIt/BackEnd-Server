@@ -1,12 +1,14 @@
-package com.choi.doit.global.error;
+package com.choi.doit.global.error.handler;
 
 import com.choi.doit.global.common.response.ResponseDto;
+import com.choi.doit.global.error.GlobalErrorCode;
 import com.choi.doit.global.error.exception.RestApiException;
 import com.choi.doit.global.error.exception.SpringSecurityException;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,6 +23,17 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RestApiException.class)
     public ResponseEntity<ResponseDto> exceptionHandler(RestApiException e) {
         HttpStatus httpStatus = e.getErrorCode().getHttpStatus();
+        String message = e.getMessage();
+
+        e.printStackTrace();
+
+        return ResponseEntity.status(httpStatus.value()).body(ResponseDto.of(httpStatus.value(), message));
+    }
+
+    // AuthenticationServiceException
+    @ExceptionHandler(AuthenticationServiceException.class)
+    public ResponseEntity<ResponseDto> exceptionHandler(AuthenticationServiceException e) {
+        HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
         String message = e.getMessage();
 
         e.printStackTrace();

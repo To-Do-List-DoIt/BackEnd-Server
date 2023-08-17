@@ -69,7 +69,7 @@ public class JoinApi {
     }
 
     // 이메일, 닉네임 중복확인
-    @GetMapping("/check")
+    @GetMapping("/sign-up/check")
     public ResponseEntity<ResponseDto> checkDuplicate(DuplicateCheckRequestDto dto) {
         emailJoinService.checkDuplicate(dto);
 
@@ -78,7 +78,15 @@ public class JoinApi {
 
     // 이메일 가입
     @PostMapping(path = "/sign-up/email", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<ResponseDto> join(@RequestHeader(required = false) @Value("Authorization") String authorization, @Valid @ModelAttribute EmailJoinRequestDto emailJoinRequestDto) throws IOException {
+    public ResponseEntity<ResponseDto> join(@Valid @ModelAttribute EmailJoinRequestDto emailJoinRequestDto) throws IOException {
+        EmailJoinResponseDto emailJoinResponseDto = emailJoinService.join(null, emailJoinRequestDto);
+
+        return ResponseEntity.status(201).body(DataResponseDto.of(emailJoinResponseDto, 201));
+    }
+
+    // 게스트 이메일 가입
+    @PostMapping(path = "/guest/email", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<ResponseDto> join(@RequestHeader @Value("Authorization") String authorization, @Valid @ModelAttribute EmailJoinRequestDto emailJoinRequestDto) throws IOException {
         EmailJoinResponseDto emailJoinResponseDto = emailJoinService.join(authorization, emailJoinRequestDto);
 
         return ResponseEntity.status(201).body(DataResponseDto.of(emailJoinResponseDto, 201));

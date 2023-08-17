@@ -1,5 +1,7 @@
 package com.choi.doit.global.util;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
@@ -38,13 +40,14 @@ public class RandomUtil {
         return String.valueOf(stringBuilder);
     }
 
-    public String getRandomNickname() {
+    public String getRandomUsername() {
         String uuid = UUID.randomUUID().toString().replace("-", "");
 
         return "User" + uuid;
     }
 
-    public String getRandomPassword(int length) {
+    public String getRandomPassword(int length, boolean isEncoded) {
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
         SecureRandom secureRandom = new SecureRandom();
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -53,6 +56,7 @@ public class RandomUtil {
             stringBuilder.append(characterTable[secureRandom.nextInt(tableLength)]);
         }
 
-        return stringBuilder.toString();
+        String raw_password = stringBuilder.toString();
+        return isEncoded ? encoder.encode(raw_password) : raw_password;
     }
 }

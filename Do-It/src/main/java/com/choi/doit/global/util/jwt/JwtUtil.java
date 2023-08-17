@@ -13,11 +13,13 @@ import io.jsonwebtoken.Header;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.util.*;
 
+import static com.choi.doit.global.error.GlobalErrorCode.TOKEN_REQUIRED;
 import static io.jsonwebtoken.Jwts.builder;
 import static io.jsonwebtoken.Jwts.parser;
 
@@ -79,17 +81,21 @@ public class JwtUtil {
     }
 
     // Decode Bearer
-    private String decodeBearer(String bearer_token) {
+    public String decodeBearer(String bearer_token) {
         return Arrays.stream(bearer_token.split(BEARER)).toList().get(1);
     }
 
     // Decode request
-    public Optional<String> decodeHeader(boolean isAccessToken, HttpServletRequest request) {
+    public String decodeHeader(boolean isAccessToken, HttpServletRequest request) {
         String header = isAccessToken ? ACCESS_HEADER : REFRESH_HEADER;
 
-        return Optional.ofNullable(request.getHeader(header))
-                .filter(token -> token.startsWith(BEARER))
-                .map(token -> token.replace(BEARER, ""));
+        String header_value = request.getHeader(header);
+        if (isAccessToken && header_value == null)
+            throw new AuthenticationServiceException(TOKEN_REQUIRED.getMessage());
+        else if (header_value == null)
+            return null;
+
+        return decodeBearer(header_value);
     }
 
     // Validate access token
@@ -98,7 +104,7 @@ public class JwtUtil {
         Map<String, Object> payloads = validateJwt(access_token);
 
         // user 정보 존재 여부 검사
-        UserEntity user = userRepository.findById((Long) payloads.get("user_id"))
+        UserEntity user = userRepository.findById(((Number) payloads.get("user_id")).longValue())
                 .orElseThrow(() -> new RestApiException(GlobalErrorCode.USER_NOT_FOUND));
 
         // refresh token 존재 여부 검사
@@ -115,7 +121,7 @@ public class JwtUtil {
         Map<String, Object> payloads = validateJwt(refresh_token);
 
         // user 정보 존재 여부 검사
-        UserEntity user = userRepository.findById((Long) payloads.get("user_id"))
+        UserEntity user = userRepository.findById(((Number) payloads.get("user_id")).longValue())
                 .orElseThrow(() -> new RestApiException(GlobalErrorCode.USER_NOT_FOUND));
 
         // refresh token 존재 여부 검사
