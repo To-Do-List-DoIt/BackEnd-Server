@@ -70,7 +70,7 @@ public class EmailJoinService {
 
         if (is_authenticated == null)
             // 해당 이메일이 존재하지 않음
-            throw new RestApiException(UserErrorCode.UNAUTHENTICATED_EMAIL);
+            throw new RestApiException(UserErrorCode.EMAIL_NOT_FOUND);
 
         return is_authenticated;
     }
