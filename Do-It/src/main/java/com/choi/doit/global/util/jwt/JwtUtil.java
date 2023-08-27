@@ -81,8 +81,12 @@ public class JwtUtil {
     }
 
     // Decode Bearer
-    public String decodeBearer(String bearer_token) {
-        return Arrays.stream(bearer_token.split(BEARER)).toList().get(1);
+    public String decodeBearer(String bearer_token) throws SpringSecurityException {
+        try {
+            return Arrays.stream(bearer_token.split(BEARER)).toList().get(1);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new SpringSecurityException(GlobalErrorCode.INVALID_TOKEN);
+        }
     }
 
     // Decode request
