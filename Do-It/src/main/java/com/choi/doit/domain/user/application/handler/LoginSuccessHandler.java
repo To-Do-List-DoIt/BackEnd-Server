@@ -7,7 +7,6 @@ import com.choi.doit.global.error.GlobalErrorCode;
 import com.choi.doit.global.error.exception.SpringSecurityException;
 import com.choi.doit.global.util.ResponseUtil;
 import com.choi.doit.global.util.jwt.JwtUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,6 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final UserRepository userRepository;
-    private final ObjectMapper mapper;
     private final ResponseUtil responseUtil;
     private final JwtUtil jwtUtil;
 
