@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum GlobalErrorCode implements ErrorCode {
+    INVALID_TIME_FORMAT(HttpStatus.BAD_REQUEST, "Invalid time format. (Time format - HH:MM)"),
+    INVALID_DATE_FORMAT(HttpStatus.BAD_REQUEST, "Invalid email format. (Date format - YY-MM-DD)"),
     AUTHORIZATION_FAILED(HttpStatus.UNAUTHORIZED, "Authorization failed"),
     AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, "Authentication failed"),
     LOGIN_REQUIRED(HttpStatus.FORBIDDEN, "Login required."),
