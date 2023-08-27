@@ -1,21 +1,24 @@
 package com.choi.doit.domain.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.transaction.Transactional;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-@NoArgsConstructor
-@Entity
+@Builder
 @Getter
 @Setter
-@Table(name = "To-Do")
+@AllArgsConstructor
+@NoArgsConstructor
+@DynamicUpdate
+@Entity(name = "Todo")
+@Table(name = "Todo")
 public class TodoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +27,8 @@ public class TodoEntity {
     private UserEntity user;
     @Column(length = 50)
     private String content;
+    @ManyToOne
+    private CategoryEntity category;
     private LocalDate date;
     private LocalTime time;
     private boolean is_checked;
@@ -31,4 +36,28 @@ public class TodoEntity {
     private LocalDateTime created_at;
     @UpdateTimestamp
     private LocalDateTime updated_at;
+
+    public TodoEntity(UserEntity user, String content, CategoryEntity category, LocalDate date, LocalTime time) {
+        this.user = user;
+        this.content = content;
+        this.category = category;
+        this.date = date;
+        this.time = time;
+        is_checked = false;
+    }
+
+    @Transactional
+    public boolean updateIsChecked() {
+        this.is_checked = !is_checked;
+
+        return is_checked;
+    }
+
+    @Transactional
+    public void update(String content, CategoryEntity category, LocalDate date, LocalTime time) {
+        this.content = content;
+        this.category = category;
+        this.date = date;
+        this.time = time;
+    }
 }
