@@ -9,13 +9,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
-@NoArgsConstructor
-@Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@Entity
+@DynamicUpdate
 @Table(name = "User")
 public class UserEntity {
     @Id
@@ -55,5 +58,18 @@ public class UserEntity {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof UserEntity userEntity)) return false;
+
+        return Objects.equals(this.id, userEntity.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email);
     }
 }
