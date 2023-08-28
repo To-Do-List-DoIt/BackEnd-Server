@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Transactional
 @Slf4j
 @SpringBootTest
 class CategoryRepositoryTest {
@@ -34,7 +35,6 @@ class CategoryRepositoryTest {
         this.userRepository = userRepository;
     }
 
-    @Transactional
     @BeforeEach
     void addData() {
         UserEntity user = new UserEntity(new EmailJoinRequestDto(email, password, nickname, null), null);
