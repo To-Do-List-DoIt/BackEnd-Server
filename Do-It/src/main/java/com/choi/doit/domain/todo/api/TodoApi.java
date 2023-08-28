@@ -4,6 +4,7 @@ import com.choi.doit.domain.todo.application.TodoCUDService;
 import com.choi.doit.domain.todo.application.TodoCategoryService;
 import com.choi.doit.domain.todo.application.TodoRService;
 import com.choi.doit.domain.todo.dto.CategoryListItemDto;
+import com.choi.doit.domain.todo.dto.request.AddCategoryRequestDto;
 import com.choi.doit.domain.todo.dto.request.EditTodoRequestDto;
 import com.choi.doit.domain.todo.dto.request.NewTodoRequestDto;
 import com.choi.doit.domain.todo.dto.response.*;
@@ -81,5 +82,12 @@ public class TodoApi {
         ArrayList<CategoryListItemDto> data = todoCategoryService.readAll();
 
         return ResponseEntity.ok(DataResponseDto.of(data, 200));
+    }
+
+    @PostMapping("/category")
+    public ResponseEntity<ResponseDto> addNewCategory(AddCategoryRequestDto addCategoryRequestDto) {
+        todoCategoryService.addNew(addCategoryRequestDto);
+
+        return ResponseEntity.status(201).body(ResponseDto.of(201));
     }
 }
