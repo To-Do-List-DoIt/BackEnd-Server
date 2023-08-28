@@ -1,7 +1,6 @@
 package com.choi.doit.domain.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,11 +18,22 @@ public class CategoryEntity {
     private Long id;
     @OneToOne
     private UserEntity user;
-    @Size(max = 50)
+    @Column(length = 50)
     private String name;
+    private String color;
+    private Boolean isPrivate;
 
-    public CategoryEntity(UserEntity user, String name) {
+    public CategoryEntity(UserEntity user, String name, String color) {
         this.user = user;
         this.name = name;
+        this.color = color;
+        this.isPrivate = false;
+    }
+
+    public CategoryEntity(UserEntity user, String name, String color, Boolean isPrivate) {
+        this.user = user;
+        this.name = name;
+        this.color = color;
+        this.isPrivate = isPrivate;
     }
 }

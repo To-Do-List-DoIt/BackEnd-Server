@@ -64,7 +64,7 @@ class TodoApiTest {
         String token = jwtUtil.generateTokens(user).getAccess_token();
         accessToken += token;
 
-        CategoryEntity category = new CategoryEntity(user, categoryStr);
+        CategoryEntity category = new CategoryEntity(user, categoryStr, "FF0000");
         categoryRepository.save(category);
 
         LocalDate date = LocalDate.parse(dateStr);

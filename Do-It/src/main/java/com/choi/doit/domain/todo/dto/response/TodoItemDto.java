@@ -1,6 +1,5 @@
 package com.choi.doit.domain.todo.dto.response;
 
-import com.choi.doit.domain.model.CategoryEntity;
 import com.choi.doit.domain.model.TodoEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,9 +19,9 @@ public class TodoItemDto {
     private LocalTime time;
     private boolean checked;
 
-    public TodoItemDto(TodoEntity todo, CategoryEntity category) {
+    public TodoItemDto(TodoEntity todo) {
         this.todo_id = todo.getId();
-        this.category = category.getName();
+        this.category = todo.getCategory().getName();
         this.content = todo.getContent();
         this.date = todo.getDate();
         this.time = todo.getTime();

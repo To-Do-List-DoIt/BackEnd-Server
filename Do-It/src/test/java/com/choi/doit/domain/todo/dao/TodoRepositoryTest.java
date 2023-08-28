@@ -47,7 +47,7 @@ class TodoRepositoryTest {
         UserEntity user = new UserEntity(new EmailJoinRequestDto(email, password, nickname, null), null);
         userRepository.save(user);
 
-        CategoryEntity category = new CategoryEntity(user, categoryStr);
+        CategoryEntity category = new CategoryEntity(user, categoryStr, "FF0000");
         categoryRepository.save(category);
 
         LocalDate date = LocalDate.parse(dateStr);
