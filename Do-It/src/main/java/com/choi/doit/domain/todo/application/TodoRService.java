@@ -1,7 +1,6 @@
 package com.choi.doit.domain.todo.application;
 
 import com.choi.doit.domain.model.CategoryEntity;
-import com.choi.doit.domain.model.TodoEntity;
 import com.choi.doit.domain.model.UserEntity;
 import com.choi.doit.domain.todo.dao.CategoryRepository;
 import com.choi.doit.domain.todo.dao.TodoRepository;
@@ -41,14 +40,9 @@ public class TodoRService {
         Map<String, LinkedList<TodoItemDto>> result = new HashMap<>();
 
         for (CategoryEntity category : categoryList) {
-            LinkedList<TodoEntity> entityList = todoRepository.findAllByUserAndDateAndCategoryOrderByTimeAsc(user, date, category);
-            LinkedList<TodoItemDto> dtoList = new LinkedList<>();
+            LinkedList<TodoItemDto> list = todoRepository.findAllByUserAndDateAndCategoryOrderByTimeAscWithJpql(user, date, category);
 
-            for (TodoEntity todo : entityList) {
-                dtoList.add(new TodoItemDto(todo, category));
-            }
-
-            result.put(category.getName(), dtoList);
+            result.put(category.getName(), list);
         }
 
         return new DayTodoDto(result);
@@ -60,12 +54,7 @@ public class TodoRService {
         CategoryEntity categoryEntity = categoryRepository.findByUserAndName(user, category)
                 .orElseThrow(() -> new RestApiException(TodoErrorCode.CATEGORY_NOT_FOUND));
 
-        LinkedList<TodoEntity> find = todoRepository.findAllByUserAndDateAndCategoryOrderByTimeAsc(user, date, categoryEntity);
-        LinkedList<TodoItemDto> result = new LinkedList<>();
-
-        for (TodoEntity todo : find) {
-            result.add(new TodoItemDto(todo, categoryEntity));
-        }
+        LinkedList<TodoItemDto> result = todoRepository.findAllByUserAndDateAndCategoryOrderByTimeAscWithJpql(user, date, categoryEntity);
 
         return new CategoryDayTodoDto(result);
     }
