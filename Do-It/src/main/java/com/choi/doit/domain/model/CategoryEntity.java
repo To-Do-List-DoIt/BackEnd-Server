@@ -1,6 +1,7 @@
 package com.choi.doit.domain.model;
 
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,6 +33,13 @@ public class CategoryEntity {
 
     public CategoryEntity(UserEntity user, String name, String color, Boolean isPrivate) {
         this.user = user;
+        this.name = name;
+        this.color = color;
+        this.isPrivate = isPrivate;
+    }
+
+    @Transactional
+    public void update(String name, String color, Boolean isPrivate) {
         this.name = name;
         this.color = color;
         this.isPrivate = isPrivate;

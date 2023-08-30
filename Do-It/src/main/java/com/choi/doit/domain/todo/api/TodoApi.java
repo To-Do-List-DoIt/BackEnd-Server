@@ -3,8 +3,10 @@ package com.choi.doit.domain.todo.api;
 import com.choi.doit.domain.todo.application.TodoCUDService;
 import com.choi.doit.domain.todo.application.TodoCategoryService;
 import com.choi.doit.domain.todo.application.TodoRService;
+import com.choi.doit.domain.todo.dto.CategoryDetailDto;
 import com.choi.doit.domain.todo.dto.CategoryListItemDto;
 import com.choi.doit.domain.todo.dto.request.AddCategoryRequestDto;
+import com.choi.doit.domain.todo.dto.request.EditCategoryRequestDto;
 import com.choi.doit.domain.todo.dto.request.EditTodoRequestDto;
 import com.choi.doit.domain.todo.dto.request.NewTodoRequestDto;
 import com.choi.doit.domain.todo.dto.response.*;
@@ -17,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.ArrayList;
 
 @Slf4j
@@ -86,8 +89,15 @@ public class TodoApi {
 
     @PostMapping("/category")
     public ResponseEntity<ResponseDto> addNewCategory(AddCategoryRequestDto addCategoryRequestDto) {
-        todoCategoryService.addNew(addCategoryRequestDto);
+        AddCategoryResponseDto addCategoryResponseDto = todoCategoryService.addNew(addCategoryRequestDto);
 
-        return ResponseEntity.status(201).body(ResponseDto.of(201));
+        return ResponseEntity.created(URI.create("/category/" + addCategoryResponseDto.getCategory_id())).body(DataResponseDto.of(addCategoryResponseDto.getDto(), 201));
+    }
+
+    @PatchMapping("/category/{category-id}")
+    public ResponseEntity<ResponseDto> editCategory(@PathVariable("category-id") Long category_id, EditCategoryRequestDto editCategoryRequestDto) {
+        CategoryDetailDto categoryDetailDto = todoCategoryService.modify(category_id, editCategoryRequestDto);
+
+        return ResponseEntity.status(201).body(DataResponseDto.of(categoryDetailDto, 201));
     }
 }
