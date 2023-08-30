@@ -100,4 +100,11 @@ public class TodoApi {
 
         return ResponseEntity.status(201).body(DataResponseDto.of(categoryDetailDto, 201));
     }
+
+    @DeleteMapping("/category/{category-id}")
+    public ResponseEntity<ResponseDto> removeCategory(@PathVariable("category-id") Long category_id) {
+        todoCategoryService.remove(category_id);
+
+        return ResponseEntity.ok(ResponseDto.of(200));
+    }
 }

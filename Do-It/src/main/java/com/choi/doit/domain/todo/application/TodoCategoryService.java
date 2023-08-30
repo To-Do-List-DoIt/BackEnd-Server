@@ -62,4 +62,19 @@ public class TodoCategoryService {
 
         return new CategoryDetailDto(category);
     }
+
+    public void remove(Long category_id) throws RestApiException {
+        UserEntity user = securityContextUtil.getUserEntity();
+
+        // 카테고리 조회
+        CategoryEntity category = categoryRepository.findById(category_id)
+                .orElseThrow(() -> new RestApiException(TodoErrorCode.CATEGORY_NOT_FOUND));
+
+        // 카테고리의 user 일치 여부 검사
+        if (!category.getUser().equals(user))
+            throw new RestApiException(TodoErrorCode.ACCESS_DENIED);
+
+        // 데이터 삭제
+        categoryRepository.delete(category);
+    }
 }
