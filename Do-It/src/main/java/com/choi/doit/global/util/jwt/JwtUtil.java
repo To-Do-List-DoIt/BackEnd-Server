@@ -60,7 +60,7 @@ public class JwtUtil {
     }
 
     public LoginResponseDto generateTokens(UserEntity user) {
-        GenerateTokenVo vo = new GenerateTokenVo(user.getId(), user.getNickname());
+        GenerateTokenVo vo = new GenerateTokenVo(user.getId(), user.getEmail());
 
         // 토큰 발급
         String access_token = generateToken(true, vo);

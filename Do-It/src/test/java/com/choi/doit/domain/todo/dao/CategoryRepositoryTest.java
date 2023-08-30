@@ -37,7 +37,7 @@ class CategoryRepositoryTest {
 
     @BeforeEach
     void addData() {
-        UserEntity user = new UserEntity(new EmailJoinRequestDto(email, password, nickname, null), null);
+        UserEntity user = new UserEntity(new EmailJoinRequestDto(email, password, null), null);
         userRepository.save(user);
 
         CategoryEntity category = new CategoryEntity(user, categoryStr, color);

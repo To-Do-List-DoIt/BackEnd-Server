@@ -53,11 +53,9 @@ public class EmailJoinService {
         Long user_id = user.getId();
         String email = dto.getEmail();
         String password = dto.getPassword();
-        String nickname = dto.getNickname();
 
         userRepository.updateRole(Role.MEMBER, user_id);
         userRepository.updateEmail(email, user_id);
-        userRepository.updateNickname(nickname, user_id);
         userRepository.updatePassword(password, user_id);
         userRepository.updateProfileImagePath(profile_path, user_id);
 
@@ -165,7 +163,6 @@ public class EmailJoinService {
 
         String email = emailJoinRequestDto.getEmail();
         String password = emailJoinRequestDto.getPassword();
-        String nickname = emailJoinRequestDto.getNickname();
         MultipartFile image = emailJoinRequestDto.getProfile();
         String profile_path = null;
 
@@ -175,9 +172,6 @@ public class EmailJoinService {
 
         // 이메일 중복 검사
         duplicateCheckUtil.isDupEmail(email);
-
-        // 닉네임 중복 검사
-        duplicateCheckUtil.isDupNickname(nickname);
 
         // 프로필 이미지 저장
         if (image != null)

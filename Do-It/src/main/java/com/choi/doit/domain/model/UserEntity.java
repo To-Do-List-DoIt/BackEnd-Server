@@ -25,7 +25,6 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String email;
-    private String nickname;
     private String password;
     @Column(columnDefinition = "TEXT")
     private String profile_image_path;
@@ -45,19 +44,17 @@ public class UserEntity {
     public UserEntity(EmailJoinRequestDto emailJoinRequestDto, String profile_image_path) {
         role = Role.MEMBER;
         this.email = emailJoinRequestDto.getEmail();
-        this.nickname = emailJoinRequestDto.getNickname();
         this.password = emailJoinRequestDto.getPassword();
         this.profile_image_path = profile_image_path;
     }
 
     // For oauth2 user
     @Builder
-    public UserEntity(Provider provider, String email, String password, String nickname) {
+    public UserEntity(Provider provider, String email, String password) {
         role = Role.MEMBER;
         this.provider = provider;
         this.email = email;
         this.password = password;
-        this.nickname = nickname;
     }
 
     @Override

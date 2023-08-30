@@ -11,7 +11,6 @@ import lombok.*;
 public class OAuthUserInfoDto {
     private Provider provider;
     private String email;
-    private String nickname;
     private String password;
     private String profile_image_path;
 }

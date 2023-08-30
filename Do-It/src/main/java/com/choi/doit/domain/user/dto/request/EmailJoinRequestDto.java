@@ -23,10 +23,6 @@ public class EmailJoinRequestDto {
     @Size(min = 5, max = 20)
     private String password;
 
-    @NotNull
-    @Size(min = 3, max = 8)
-    private String nickname;
-
     private MultipartFile profile;
 
     public UserEntity toEntity(String profile_image_path) {
