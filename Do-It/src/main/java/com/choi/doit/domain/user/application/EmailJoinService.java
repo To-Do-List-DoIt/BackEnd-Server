@@ -196,7 +196,7 @@ public class EmailJoinService {
             duplicateCheckUtil.isDupEmail(vo);
         } else if (type.equals("nickname")) {
             NicknameVo vo = new NicknameVo(value);
-            duplicateCheckUtil.isDupNickname(vo);
+            // duplicateCheckUtil.isDupNickname(vo);
         } else {
             throw new RestApiException(UserErrorCode.INVALID_TYPE);
         }

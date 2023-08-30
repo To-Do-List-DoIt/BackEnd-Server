@@ -15,8 +15,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     Boolean existsByEmail(String email);
 
-    Boolean existsByNickname(String nickname);
-
     @Transactional
     @Modifying(clearAutomatically = true)
     @Query(value = "UPDATE UserEntity u SET u.role = :role WHERE u.id = :id")
@@ -26,11 +24,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Modifying(clearAutomatically = true)
     @Query(value = "UPDATE UserEntity u SET u.email = :email WHERE u.id = :id")
     void updateEmail(@Param("email") String email, @Param("id") Long id);
-
-    @Transactional
-    @Modifying(clearAutomatically = true)
-    @Query(value = "UPDATE UserEntity u SET u.nickname = :nickname WHERE u.id = :id")
-    void updateNickname(@Param("nickname") String nickname, @Param("id") Long id);
 
     @Transactional
     @Modifying(clearAutomatically = true)
