@@ -51,7 +51,6 @@ public class LoginService {
 
         userRepository.updateRole(Role.MEMBER, user_id);
         userRepository.updateEmail(dto.getEmail(), user_id);
-        userRepository.updateNickname(dto.getNickname(), user_id);
         userRepository.updatePassword(dto.getPassword(), user_id);
 
         return userRepository.findByEmail(dto.getEmail()).orElse(null);
@@ -82,7 +81,6 @@ public class LoginService {
         String email = dto.getEmail();
 
         // 랜덤 값 생성
-        String nickname = randomUtil.getRandomUsername();
         String password = randomUtil.getRandomPassword(15, true);
 
         // 회원 데이터 조회, 새 회원이면 데이터 생성
@@ -91,11 +89,9 @@ public class LoginService {
                     .orElseGet(() -> userRepository.save(UserEntity.builder()
                             .email(email)
                             .password(password)
-                            .nickname(nickname)
                             .provider(provider)
                             .build()));
         } else {
-            dto.setNickname(nickname);
             dto.setPassword(password);
 
             return setGuestOAuthInfo(user, dto);

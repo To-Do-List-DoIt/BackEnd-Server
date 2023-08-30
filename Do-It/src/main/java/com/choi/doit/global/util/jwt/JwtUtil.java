@@ -60,7 +60,7 @@ public class JwtUtil {
     }
 
     public LoginResponseDto generateTokens(UserEntity user) {
-        GenerateTokenVo vo = new GenerateTokenVo(user.getId(), user.getNickname());
+        GenerateTokenVo vo = new GenerateTokenVo(user.getId(), user.getEmail());
 
         // 토큰 발급
         String access_token = generateToken(true, vo);
@@ -81,8 +81,12 @@ public class JwtUtil {
     }
 
     // Decode Bearer
-    public String decodeBearer(String bearer_token) {
-        return Arrays.stream(bearer_token.split(BEARER)).toList().get(1);
+    public String decodeBearer(String bearer_token) throws SpringSecurityException {
+        try {
+            return Arrays.stream(bearer_token.split(BEARER)).toList().get(1);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new SpringSecurityException(GlobalErrorCode.INVALID_TOKEN);
+        }
     }
 
     // Decode request

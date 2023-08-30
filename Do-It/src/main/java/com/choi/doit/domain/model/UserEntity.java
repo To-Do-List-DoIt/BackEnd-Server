@@ -9,20 +9,22 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
-@NoArgsConstructor
-@Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@Entity
+@DynamicUpdate
 @Table(name = "User")
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String email;
-    private String nickname;
     private String password;
     @Column(columnDefinition = "TEXT")
     private String profile_image_path;
@@ -42,18 +44,29 @@ public class UserEntity {
     public UserEntity(EmailJoinRequestDto emailJoinRequestDto, String profile_image_path) {
         role = Role.MEMBER;
         this.email = emailJoinRequestDto.getEmail();
-        this.nickname = emailJoinRequestDto.getNickname();
         this.password = emailJoinRequestDto.getPassword();
         this.profile_image_path = profile_image_path;
     }
 
     // For oauth2 user
     @Builder
-    public UserEntity(Provider provider, String email, String password, String nickname) {
+    public UserEntity(Provider provider, String email, String password) {
         role = Role.MEMBER;
         this.provider = provider;
         this.email = email;
         this.password = password;
-        this.nickname = nickname;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof UserEntity userEntity)) return false;
+
+        return Objects.equals(this.id, userEntity.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email);
     }
 }
