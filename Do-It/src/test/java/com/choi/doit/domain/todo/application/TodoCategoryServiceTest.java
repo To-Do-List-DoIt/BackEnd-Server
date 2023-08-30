@@ -3,8 +3,10 @@ package com.choi.doit.domain.todo.application;
 import com.choi.doit.domain.model.CategoryEntity;
 import com.choi.doit.domain.model.UserEntity;
 import com.choi.doit.domain.todo.dao.CategoryRepository;
+import com.choi.doit.domain.todo.dto.CategoryDetailDto;
 import com.choi.doit.domain.todo.dto.CategoryListItemDto;
 import com.choi.doit.domain.todo.dto.request.AddCategoryRequestDto;
+import com.choi.doit.domain.todo.dto.request.EditCategoryRequestDto;
 import com.choi.doit.domain.user.dao.UserRepository;
 import com.choi.doit.domain.user.dto.request.EmailJoinRequestDto;
 import jakarta.transaction.Transactional;
@@ -29,7 +31,6 @@ class TodoCategoryServiceTest {
     private final TodoCategoryService todoCategoryService;
     final String email = "abc@abc.com";
     final String password = "password1234";
-    final String nickname = "user01";
     final String name = "Study";
     final String color = "FF0000";
     final Boolean is_private = false;
@@ -42,7 +43,7 @@ class TodoCategoryServiceTest {
     }
 
     void addData() {
-        UserEntity user = userRepository.save(new UserEntity(new EmailJoinRequestDto(email, password, nickname, null), null));
+        UserEntity user = userRepository.save(new UserEntity(new EmailJoinRequestDto(email, password, null), null));
         CategoryEntity category = new CategoryEntity(user, name, color, is_private);
         categoryRepository.save(category);
     }
@@ -67,7 +68,7 @@ class TodoCategoryServiceTest {
     @Test
     void addNew() throws Exception {
         // given
-        UserEntity user = userRepository.save(new UserEntity(new EmailJoinRequestDto(email, password, nickname, null), null));
+        UserEntity user = userRepository.save(new UserEntity(new EmailJoinRequestDto(email, password, null), null));
         AddCategoryRequestDto dto = new AddCategoryRequestDto(name, color, is_private);
 
         // when
@@ -79,5 +80,29 @@ class TodoCategoryServiceTest {
         assertThat(category.getName()).isEqualTo(name);
         assertThat(category.getColor()).isEqualTo(color);
         assertThat(category.getIsPrivate()).isEqualTo(is_private);
+    }
+
+    @DisplayName("데이터 수정")
+    @WithMockUser(username = email)
+    @Test
+    void modify() throws Exception {
+        // given
+        UserEntity user = userRepository.save(new UserEntity(new EmailJoinRequestDto(email, password, null), null));
+        CategoryEntity category = new CategoryEntity(user, name, color, is_private);
+        Long id = categoryRepository.save(category).getId();
+
+        // when
+        CategoryDetailDto dto = todoCategoryService.modify(id, new EditCategoryRequestDto(name, color, !is_private));
+        CategoryEntity categoryEntity = categoryRepository.findById(id)
+                .orElseThrow(() -> new Exception("Category not found."));
+
+        // then
+        assertThat(categoryEntity.getName()).isEqualTo(name);
+        assertThat(categoryEntity.getColor()).isEqualTo(color);
+        assertThat(categoryEntity.getIsPrivate()).isEqualTo(!is_private);
+
+        assertThat(dto.getName()).isEqualTo(name);
+        assertThat(dto.getColor()).isEqualTo(color);
+        assertThat(dto.is_private()).isEqualTo(!is_private);
     }
 }
