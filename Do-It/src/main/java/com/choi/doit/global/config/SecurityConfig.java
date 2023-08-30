@@ -79,7 +79,7 @@ public class SecurityConfig {
 
     @Bean
     public LoginSuccessHandler loginSuccessHandler() {
-        return new LoginSuccessHandler(userRepository, objectMapper, responseUtil, jwtUtil);
+        return new LoginSuccessHandler(userRepository, responseUtil, jwtUtil);
     }
 
     @Bean
