@@ -105,4 +105,21 @@ class TodoCategoryServiceTest {
         assertThat(dto.getColor()).isEqualTo(color);
         assertThat(dto.is_private()).isEqualTo(!is_private);
     }
+
+    @DisplayName("데이터 삭제")
+    @WithMockUser(username = email)
+    @Test
+    void remove() {
+        // given
+        UserEntity user = userRepository.save(new UserEntity(new EmailJoinRequestDto(email, password, null), null));
+        CategoryEntity category = new CategoryEntity(user, name, color, is_private);
+        Long id = categoryRepository.save(category).getId();
+
+        // when
+        todoCategoryService.remove(id);
+        CategoryEntity categoryEntity = categoryRepository.findById(id).orElse(null);
+
+        // then
+        assertThat(categoryEntity).isNull();
+    }
 }
