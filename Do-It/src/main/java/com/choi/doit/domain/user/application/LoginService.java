@@ -108,19 +108,4 @@ public class LoginService {
         // context holder 내의 인증 정보 삭제
         SecurityContextHolder.clearContext();
     }
-
-    // 회원탈퇴
-    public void deleteUser() {
-        UserEntity user = securityContextUtil.getUserEntity();
-
-        // 게스트 / 이메일 가입자일 경우
-        // Redis 정보 삭제
-        redisUtil.delete(user.getId() + "_refresh");
-        // 데이터 삭제
-        userRepository.delete(user);
-
-        // 소셜 가입자 - 애플
-
-        // 소셜 가입자 - 구글
-    }
 }
