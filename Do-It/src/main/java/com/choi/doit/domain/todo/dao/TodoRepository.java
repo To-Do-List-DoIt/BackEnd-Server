@@ -34,4 +34,6 @@ public interface TodoRepository extends JpaRepository<TodoEntity, Long> {
             + "and t.date between :startDate and :endDate "
             + "group by t.date")
     LinkedList<TodoCountDto> findCountByUserAndDateBetweenGroupByDateWithJpql(@Param(value = "user") UserEntity user, @Param(value = "startDate") LocalDate startDate, @Param(value = "endDate") LocalDate endDate);
+
+    Boolean existsByCheckStatusIsFalseAndUser(UserEntity user);
 }
