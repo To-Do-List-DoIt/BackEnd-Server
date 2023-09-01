@@ -31,7 +31,7 @@ public class TodoEntity {
     private CategoryEntity category;
     private LocalDate date;
     private LocalTime time;
-    private boolean is_checked;
+    private Boolean checkStatus;
     @CreationTimestamp
     private LocalDateTime created_at;
     @UpdateTimestamp
@@ -43,14 +43,14 @@ public class TodoEntity {
         this.category = category;
         this.date = date;
         this.time = time;
-        is_checked = false;
+        checkStatus = false;
     }
 
     @Transactional
     public boolean updateIsChecked() {
-        this.is_checked = !is_checked;
+        this.checkStatus = !checkStatus;
 
-        return is_checked;
+        return checkStatus;
     }
 
     @Transactional
