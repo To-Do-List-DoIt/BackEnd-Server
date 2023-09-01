@@ -1,4 +1,4 @@
-package com.choi.doit.domain.mypage.dto;
+package com.choi.doit.domain.mypage.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

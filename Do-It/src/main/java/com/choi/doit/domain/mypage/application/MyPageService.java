@@ -1,8 +1,8 @@
 package com.choi.doit.domain.mypage.application;
 
 import com.choi.doit.domain.model.UserEntity;
-import com.choi.doit.domain.mypage.dto.EditEmailRequestDto;
-import com.choi.doit.domain.mypage.dto.EditPasswordRequestDto;
+import com.choi.doit.domain.mypage.dto.request.EditEmailRequestDto;
+import com.choi.doit.domain.mypage.dto.request.EditPasswordRequestDto;
 import com.choi.doit.domain.mypage.exception.MyPageErrorCode;
 import com.choi.doit.domain.user.dao.UserRepository;
 import com.choi.doit.global.error.exception.RestApiException;

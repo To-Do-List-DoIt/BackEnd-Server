@@ -1,8 +1,8 @@
 package com.choi.doit.domain.mypage.api;
 
 import com.choi.doit.domain.mypage.application.MyPageService;
-import com.choi.doit.domain.mypage.dto.EditEmailRequestDto;
-import com.choi.doit.domain.mypage.dto.EditPasswordRequestDto;
+import com.choi.doit.domain.mypage.dto.request.EditEmailRequestDto;
+import com.choi.doit.domain.mypage.dto.request.EditPasswordRequestDto;
 import com.choi.doit.global.common.response.DataResponseDto;
 import com.choi.doit.global.common.response.ResponseDto;
 import jakarta.validation.Valid;
