@@ -11,14 +11,14 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @Getter
 @Setter
-public class UnfinishedTodoListItemDto {
+public class TodoListItemWithoutStatusDto {
     private Long todo_id;
     private String category;
     private String content;
     private LocalDate date;
     private LocalTime time;
 
-    public UnfinishedTodoListItemDto(TodoEntity todo) {
+    public TodoListItemWithoutStatusDto(TodoEntity todo) {
         this.todo_id = todo.getId();
         this.category = todo.getCategory().getName();
         this.content = todo.getContent();
