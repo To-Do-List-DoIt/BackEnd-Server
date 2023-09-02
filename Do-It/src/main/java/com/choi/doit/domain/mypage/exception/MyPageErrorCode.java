@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum MyPageErrorCode implements ErrorCode {
+    UNFINISHED_TODO_NOT_FOUND(HttpStatus.NOT_FOUND, "Unfinished todo not found."),
     EMAIL_CHANGE_FORBIDDEN(HttpStatus.FORBIDDEN, "OAuth user cannot change email."),
     EMAIL_UNCHANGED(HttpStatus.BAD_REQUEST, "Email unchanged."),
     DUPLICATED_EMAIL(HttpStatus.BAD_REQUEST, "Email already exists.");
