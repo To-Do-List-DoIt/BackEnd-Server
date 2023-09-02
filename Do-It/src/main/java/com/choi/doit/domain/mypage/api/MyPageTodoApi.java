@@ -1,6 +1,7 @@
 package com.choi.doit.domain.mypage.api;
 
 import com.choi.doit.domain.mypage.application.MyPageTodoService;
+import com.choi.doit.domain.mypage.dto.response.CountFinishedTodoResponse;
 import com.choi.doit.domain.mypage.dto.response.ReadUnfinishedTodoListResponse;
 import com.choi.doit.global.common.response.DataResponseDto;
 import com.choi.doit.global.common.response.ResponseDto;
@@ -33,5 +34,12 @@ public class MyPageTodoApi {
         ReadUnfinishedTodoListResponse readUnfinishedTodoListResponse = myPageTodoService.readUnfinishedTodoList();
 
         return ResponseEntity.ok(DataResponseDto.of(readUnfinishedTodoListResponse, 200));
+    }
+
+    @GetMapping("/finished/count")
+    public ResponseEntity<ResponseDto> countFinishedTodo() {
+        CountFinishedTodoResponse countFinishedTodoResponse = myPageTodoService.countFinishedTodo();
+
+        return ResponseEntity.ok(DataResponseDto.of(countFinishedTodoResponse, 200));
     }
 }

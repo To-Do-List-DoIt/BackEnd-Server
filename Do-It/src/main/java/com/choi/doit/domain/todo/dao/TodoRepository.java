@@ -3,7 +3,7 @@ package com.choi.doit.domain.todo.dao;
 import com.choi.doit.domain.model.CategoryEntity;
 import com.choi.doit.domain.model.TodoEntity;
 import com.choi.doit.domain.model.UserEntity;
-import com.choi.doit.domain.mypage.dto.UnfinishedTodoListItemDto;
+import com.choi.doit.domain.mypage.dto.TodoListItemWithoutStatusDto;
 import com.choi.doit.domain.todo.dto.TodoCountDto;
 import com.choi.doit.domain.todo.dto.response.TodoItemDto;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -38,9 +38,11 @@ public interface TodoRepository extends JpaRepository<TodoEntity, Long> {
 
     Boolean existsByCheckStatusIsFalseAndUser(UserEntity user);
 
-    @Query(value = "select new com.choi.doit.domain.mypage.dto.UnfinishedTodoListItemDto(t) "
+    @Query(value = "select new com.choi.doit.domain.mypage.dto.TodoListItemWithoutStatusDto(t) "
             + "from Todo t "
             + "where t.user = :user "
             + "and t.checkStatus = false ")
-    LinkedList<UnfinishedTodoListItemDto> findAllByUserAndCheckStatusIsFalseWithJpql(UserEntity user);
+    LinkedList<TodoListItemWithoutStatusDto> findAllByUserAndCheckStatusIsFalseWithJpql(UserEntity user);
+
+    Long countAllByUserAndCheckStatusIsTrue(UserEntity user);
 }

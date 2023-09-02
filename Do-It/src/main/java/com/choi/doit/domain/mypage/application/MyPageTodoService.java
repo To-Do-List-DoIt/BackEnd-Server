@@ -1,7 +1,8 @@
 package com.choi.doit.domain.mypage.application;
 
 import com.choi.doit.domain.model.UserEntity;
-import com.choi.doit.domain.mypage.dto.UnfinishedTodoListItemDto;
+import com.choi.doit.domain.mypage.dto.TodoListItemWithoutStatusDto;
+import com.choi.doit.domain.mypage.dto.response.CountFinishedTodoResponse;
 import com.choi.doit.domain.mypage.dto.response.ReadUnfinishedTodoListResponse;
 import com.choi.doit.domain.mypage.exception.MyPageErrorCode;
 import com.choi.doit.domain.todo.dao.TodoRepository;
@@ -30,8 +31,16 @@ public class MyPageTodoService {
     // 미완료 To-Do 리스트 조회
     public ReadUnfinishedTodoListResponse readUnfinishedTodoList() {
         UserEntity user = securityContextUtil.getUserEntity();
-        LinkedList<UnfinishedTodoListItemDto> list = todoRepository.findAllByUserAndCheckStatusIsFalseWithJpql(user);
+        LinkedList<TodoListItemWithoutStatusDto> list = todoRepository.findAllByUserAndCheckStatusIsFalseWithJpql(user);
 
         return new ReadUnfinishedTodoListResponse(list);
+    }
+
+    // 완료 To-Do 개수 조회
+    public CountFinishedTodoResponse countFinishedTodo() {
+        UserEntity user = securityContextUtil.getUserEntity();
+        Long count = todoRepository.countAllByUserAndCheckStatusIsTrue(user);
+
+        return new CountFinishedTodoResponse(count);
     }
 }
