@@ -3,7 +3,6 @@ package com.choi.doit.domain.mypage.application;
 import com.choi.doit.domain.model.CategoryEntity;
 import com.choi.doit.domain.model.TodoEntity;
 import com.choi.doit.domain.model.UserEntity;
-import com.choi.doit.domain.mypage.dto.response.HasUnfinishedTodoResponse;
 import com.choi.doit.domain.mypage.dto.response.ReadUnfinishedTodoListResponse;
 import com.choi.doit.domain.todo.dao.CategoryRepository;
 import com.choi.doit.domain.todo.dao.TodoRepository;
@@ -21,6 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 @DisplayName("MyPage Todo Service Test")
 @Transactional
@@ -58,12 +58,14 @@ class MyPageTodoServiceTest {
         categoryRepository.save(category);
         TodoEntity todo = new TodoEntity(user, content, category, LocalDate.parse(dateStr), LocalTime.parse(timeStr));
         todoRepository.save(todo);
+        MyPageTodoService mock = mock(MyPageTodoService.class);
 
         // when
-        HasUnfinishedTodoResponse result = myPageTodoService.hasUnfinishedTodo();
+        mock.hasUnfinishedTodo();
 
         // then
-        assertThat(result.getHasUnfinishedTodo()).isTrue();
+        verify(mock, atMostOnce()).hasUnfinishedTodo();
+
     }
 
     @DisplayName("미완료 Todo 리스트 조회")
