@@ -4,6 +4,7 @@ import com.choi.doit.domain.model.CategoryEntity;
 import com.choi.doit.domain.model.TodoEntity;
 import com.choi.doit.domain.model.UserEntity;
 import com.choi.doit.domain.mypage.dto.response.HasUnfinishedTodoResponse;
+import com.choi.doit.domain.mypage.dto.response.ReadUnfinishedTodoListResponse;
 import com.choi.doit.domain.todo.dao.CategoryRepository;
 import com.choi.doit.domain.todo.dao.TodoRepository;
 import com.choi.doit.domain.user.dao.UserRepository;
@@ -37,6 +38,7 @@ class MyPageTodoServiceTest {
     final String dateStr = "2023-08-26";
     final String timeStr = "08:00:00";
     final String content = "content_test";
+    final String content2 = "content_test2";
 
     @Autowired
     MyPageTodoServiceTest(MyPageTodoService myPageTodoService, UserRepository userRepository, TodoRepository todoRepository, CategoryRepository categoryRepository) {
@@ -62,5 +64,28 @@ class MyPageTodoServiceTest {
 
         // then
         assertThat(result.getHasUnfinishedTodo()).isTrue();
+    }
+
+    @DisplayName("미완료 Todo 리스트 조회")
+    @WithMockUser(username = email)
+    @Test
+    void readUnfinishedTodoList() {
+        // given
+        UserEntity user = userRepository.save(new UserEntity(new EmailJoinRequestDto(email, password, null), null));
+        CategoryEntity category = new CategoryEntity(user, categoryStr, color);
+        categoryRepository.save(category);
+        TodoEntity todo = new TodoEntity(user, content, category, LocalDate.parse(dateStr), LocalTime.parse(timeStr));
+        todoRepository.save(todo);
+        TodoEntity todo2 = new TodoEntity(user, content2, category, LocalDate.parse(dateStr), LocalTime.parse(timeStr));
+        todoRepository.save(todo2);
+
+        todo2.updateIsChecked();
+
+        // when
+        ReadUnfinishedTodoListResponse response = myPageTodoService.readUnfinishedTodoList();
+
+        // then
+        assertThat(response.getList().size()).isEqualTo(1);
+        assertThat(response.getList().get(0).getContent()).isEqualTo(content);
     }
 }
