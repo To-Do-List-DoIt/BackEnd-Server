@@ -7,6 +7,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class HasUnfinishedTodoResponse {
+public class HasUnfinishedTodoResponseDto {
     private Boolean hasUnfinishedTodo;
 }

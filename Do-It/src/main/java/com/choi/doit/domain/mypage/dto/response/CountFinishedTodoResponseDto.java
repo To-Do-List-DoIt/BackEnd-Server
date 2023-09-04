@@ -7,6 +7,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class CountFinishedTodoResponse {
+public class CountFinishedTodoResponseDto {
     private Long count;
 }

@@ -3,8 +3,8 @@ package com.choi.doit.domain.mypage.application;
 import com.choi.doit.domain.model.TodoEntity;
 import com.choi.doit.domain.model.UserEntity;
 import com.choi.doit.domain.mypage.dto.TodoListItemWithoutStatusDto;
-import com.choi.doit.domain.mypage.dto.response.CountFinishedTodoResponse;
-import com.choi.doit.domain.mypage.dto.response.ReadTodoWithoutStatusListResponse;
+import com.choi.doit.domain.mypage.dto.response.CountFinishedTodoResponseDto;
+import com.choi.doit.domain.mypage.dto.response.ReadTodoWithoutStatusListResponseDto;
 import com.choi.doit.domain.mypage.exception.MyPageErrorCode;
 import com.choi.doit.domain.todo.dao.TodoRepository;
 import com.choi.doit.global.error.exception.RestApiException;
@@ -30,23 +30,23 @@ public class MyPageTodoService {
     }
 
     // 미완료 To-Do 리스트 조회
-    public ReadTodoWithoutStatusListResponse readUnfinishedTodoList() {
+    public ReadTodoWithoutStatusListResponseDto readUnfinishedTodoList() {
         UserEntity user = securityContextUtil.getUserEntity();
         LinkedList<TodoListItemWithoutStatusDto> list = todoRepository.findAllByUserAndCheckStatusIsFalseWithJpql(user);
 
-        return new ReadTodoWithoutStatusListResponse(list);
+        return new ReadTodoWithoutStatusListResponseDto(list);
     }
 
     // 완료 To-Do 개수 조회
-    public CountFinishedTodoResponse countFinishedTodo() {
+    public CountFinishedTodoResponseDto countFinishedTodo() {
         UserEntity user = securityContextUtil.getUserEntity();
         Long count = todoRepository.countAllByUserAndCheckStatusIsTrue(user);
 
-        return new CountFinishedTodoResponse(count);
+        return new CountFinishedTodoResponseDto(count);
     }
 
     // 완료 To-Do 상위 2건 조회
-    public ReadTodoWithoutStatusListResponse readFinishedTodoListTop2() {
+    public ReadTodoWithoutStatusListResponseDto readFinishedTodoListTop2() {
         UserEntity user = securityContextUtil.getUserEntity();
         LinkedList<TodoEntity> data = todoRepository.findTop2ByUserAndCheckStatusIsTrueOrderByDateDesc(user);
         LinkedList<TodoListItemWithoutStatusDto> result = new LinkedList<>();
@@ -55,6 +55,6 @@ public class MyPageTodoService {
             result.add(new TodoListItemWithoutStatusDto(todo));
         }
 
-        return new ReadTodoWithoutStatusListResponse(result);
+        return new ReadTodoWithoutStatusListResponseDto(result);
     }
 }

@@ -3,8 +3,8 @@ package com.choi.doit.domain.mypage.application;
 import com.choi.doit.domain.model.CategoryEntity;
 import com.choi.doit.domain.model.TodoEntity;
 import com.choi.doit.domain.model.UserEntity;
-import com.choi.doit.domain.mypage.dto.response.CountFinishedTodoResponse;
-import com.choi.doit.domain.mypage.dto.response.ReadTodoWithoutStatusListResponse;
+import com.choi.doit.domain.mypage.dto.response.CountFinishedTodoResponseDto;
+import com.choi.doit.domain.mypage.dto.response.ReadTodoWithoutStatusListResponseDto;
 import com.choi.doit.domain.todo.dao.CategoryRepository;
 import com.choi.doit.domain.todo.dao.TodoRepository;
 import com.choi.doit.domain.user.dao.UserRepository;
@@ -84,7 +84,7 @@ class MyPageTodoServiceTest {
         todo2.updateIsChecked();
 
         // when
-        ReadTodoWithoutStatusListResponse response = myPageTodoService.readUnfinishedTodoList();
+        ReadTodoWithoutStatusListResponseDto response = myPageTodoService.readUnfinishedTodoList();
 
         // then
         assertThat(response.getList().size()).isEqualTo(1);
@@ -114,7 +114,7 @@ class MyPageTodoServiceTest {
         todo2.updateIsChecked();
 
         // when
-        CountFinishedTodoResponse response = myPageTodoService.countFinishedTodo();
+        CountFinishedTodoResponseDto response = myPageTodoService.countFinishedTodo();
 
         // then
         assertThat(response.getCount()).isEqualTo(1);
@@ -144,7 +144,7 @@ class MyPageTodoServiceTest {
         todo3.updateIsChecked();
 
         // when
-        ReadTodoWithoutStatusListResponse response = myPageTodoService.readFinishedTodoListTop2();
+        ReadTodoWithoutStatusListResponseDto response = myPageTodoService.readFinishedTodoListTop2();
 
         // then
         assertThat(response.getList().size()).isEqualTo(2);

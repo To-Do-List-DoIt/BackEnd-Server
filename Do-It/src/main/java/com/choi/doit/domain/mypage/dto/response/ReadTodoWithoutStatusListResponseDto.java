@@ -10,6 +10,6 @@ import java.util.LinkedList;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ReadUnfinishedTodoListResponse {
+public class ReadTodoWithoutStatusListResponseDto {
     private LinkedList<TodoListItemWithoutStatusDto> list;
 }
