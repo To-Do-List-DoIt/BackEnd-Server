@@ -45,4 +45,6 @@ public interface TodoRepository extends JpaRepository<TodoEntity, Long> {
     LinkedList<TodoListItemWithoutStatusDto> findAllByUserAndCheckStatusIsFalseWithJpql(UserEntity user);
 
     Long countAllByUserAndCheckStatusIsTrue(UserEntity user);
+
+    LinkedList<TodoEntity> findTop2ByUserAndCheckStatusIsTrueOrderByDateDesc(UserEntity user);
 }

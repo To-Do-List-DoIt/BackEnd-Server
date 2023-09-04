@@ -2,7 +2,7 @@ package com.choi.doit.domain.mypage.api;
 
 import com.choi.doit.domain.mypage.application.MyPageTodoService;
 import com.choi.doit.domain.mypage.dto.response.CountFinishedTodoResponse;
-import com.choi.doit.domain.mypage.dto.response.ReadUnfinishedTodoListResponse;
+import com.choi.doit.domain.mypage.dto.response.ReadTodoWithoutStatusListResponse;
 import com.choi.doit.global.common.response.DataResponseDto;
 import com.choi.doit.global.common.response.ResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -31,9 +31,9 @@ public class MyPageTodoApi {
     // 미완료 To-Do 리스트 조회
     @GetMapping("/unfinished")
     public ResponseEntity<ResponseDto> readUnfinishedTodoList() {
-        ReadUnfinishedTodoListResponse readUnfinishedTodoListResponse = myPageTodoService.readUnfinishedTodoList();
+        ReadTodoWithoutStatusListResponse readTodoWithoutStatusListResponse = myPageTodoService.readUnfinishedTodoList();
 
-        return ResponseEntity.ok(DataResponseDto.of(readUnfinishedTodoListResponse, 200));
+        return ResponseEntity.ok(DataResponseDto.of(readTodoWithoutStatusListResponse, 200));
     }
 
     @GetMapping("/finished/count")
@@ -41,5 +41,12 @@ public class MyPageTodoApi {
         CountFinishedTodoResponse countFinishedTodoResponse = myPageTodoService.countFinishedTodo();
 
         return ResponseEntity.ok(DataResponseDto.of(countFinishedTodoResponse, 200));
+    }
+
+    @GetMapping("/finished/top2")
+    public ResponseEntity<ResponseDto> readFinishedTodoTop2() {
+        ReadTodoWithoutStatusListResponse readTodoWithoutStatusListResponse = myPageTodoService.readFinishedTodoListTop2();
+
+        return ResponseEntity.ok(DataResponseDto.of(readTodoWithoutStatusListResponse, 200));
     }
 }
