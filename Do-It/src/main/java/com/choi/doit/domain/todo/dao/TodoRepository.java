@@ -3,6 +3,7 @@ package com.choi.doit.domain.todo.dao;
 import com.choi.doit.domain.model.CategoryEntity;
 import com.choi.doit.domain.model.TodoEntity;
 import com.choi.doit.domain.model.UserEntity;
+import com.choi.doit.domain.mypage.dto.TodoListItemWithoutStatusDto;
 import com.choi.doit.domain.todo.dto.TodoCountDto;
 import com.choi.doit.domain.todo.dto.response.TodoItemDto;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -34,4 +35,16 @@ public interface TodoRepository extends JpaRepository<TodoEntity, Long> {
             + "and t.date between :startDate and :endDate "
             + "group by t.date")
     LinkedList<TodoCountDto> findCountByUserAndDateBetweenGroupByDateWithJpql(@Param(value = "user") UserEntity user, @Param(value = "startDate") LocalDate startDate, @Param(value = "endDate") LocalDate endDate);
+
+    Boolean existsByCheckStatusIsFalseAndUser(UserEntity user);
+
+    @Query(value = "select new com.choi.doit.domain.mypage.dto.TodoListItemWithoutStatusDto(t) "
+            + "from Todo t "
+            + "where t.user = :user "
+            + "and t.checkStatus = false ")
+    LinkedList<TodoListItemWithoutStatusDto> findAllByUserAndCheckStatusIsFalseWithJpql(UserEntity user);
+
+    Long countAllByUserAndCheckStatusIsTrue(UserEntity user);
+
+    LinkedList<TodoEntity> findTop2ByUserAndCheckStatusIsTrueOrderByDateDesc(UserEntity user);
 }
