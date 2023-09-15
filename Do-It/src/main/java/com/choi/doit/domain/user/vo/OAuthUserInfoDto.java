@@ -1,6 +1,6 @@
 package com.choi.doit.domain.user.vo;
 
-import com.choi.doit.domain.user.domain.Provider;
+import com.choi.doit.domain.model.Provider;
 import lombok.*;
 
 @Builder

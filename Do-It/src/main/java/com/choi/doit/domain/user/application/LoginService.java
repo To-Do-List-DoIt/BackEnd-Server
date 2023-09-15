@@ -1,9 +1,9 @@
 package com.choi.doit.domain.user.application;
 
-import com.choi.doit.domain.model.UserEntity;
+import com.choi.doit.domain.model.Provider;
+import com.choi.doit.domain.model.Role;
 import com.choi.doit.domain.user.dao.UserRepository;
-import com.choi.doit.domain.user.domain.Provider;
-import com.choi.doit.domain.user.domain.Role;
+import com.choi.doit.domain.user.domain.UserEntity;
 import com.choi.doit.domain.user.dto.response.LoginResponseDto;
 import com.choi.doit.domain.user.exception.UserErrorCode;
 import com.choi.doit.domain.user.vo.OAuthUserInfoDto;

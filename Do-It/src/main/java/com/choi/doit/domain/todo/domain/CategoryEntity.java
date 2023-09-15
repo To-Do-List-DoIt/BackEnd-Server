@@ -1,5 +1,6 @@
-package com.choi.doit.domain.model;
+package com.choi.doit.domain.todo.domain;
 
+import com.choi.doit.domain.user.domain.UserEntity;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import lombok.Getter;

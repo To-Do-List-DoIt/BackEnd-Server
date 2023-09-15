@@ -1,13 +1,13 @@
 package com.choi.doit.domain.mypage.application;
 
-import com.choi.doit.domain.model.CategoryEntity;
-import com.choi.doit.domain.model.TodoEntity;
-import com.choi.doit.domain.model.UserEntity;
 import com.choi.doit.domain.mypage.dto.response.CountFinishedTodoResponseDto;
 import com.choi.doit.domain.mypage.dto.response.ReadTodoWithoutStatusListResponseDto;
 import com.choi.doit.domain.todo.dao.CategoryRepository;
 import com.choi.doit.domain.todo.dao.TodoRepository;
+import com.choi.doit.domain.todo.domain.CategoryEntity;
+import com.choi.doit.domain.todo.domain.TodoEntity;
 import com.choi.doit.domain.user.dao.UserRepository;
+import com.choi.doit.domain.user.domain.UserEntity;
 import com.choi.doit.domain.user.dto.request.EmailJoinRequestDto;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;

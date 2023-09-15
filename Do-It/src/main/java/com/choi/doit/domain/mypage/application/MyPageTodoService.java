@@ -1,12 +1,12 @@
 package com.choi.doit.domain.mypage.application;
 
-import com.choi.doit.domain.model.TodoEntity;
-import com.choi.doit.domain.model.UserEntity;
 import com.choi.doit.domain.mypage.dto.TodoListItemWithoutStatusDto;
 import com.choi.doit.domain.mypage.dto.response.CountFinishedTodoResponseDto;
 import com.choi.doit.domain.mypage.dto.response.ReadTodoWithoutStatusListResponseDto;
 import com.choi.doit.domain.mypage.exception.MyPageErrorCode;
 import com.choi.doit.domain.todo.dao.TodoRepository;
+import com.choi.doit.domain.todo.domain.TodoEntity;
+import com.choi.doit.domain.user.domain.UserEntity;
 import com.choi.doit.global.error.exception.RestApiException;
 import com.choi.doit.global.util.SecurityContextUtil;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.choi.doit.domain.user.domain;
+package com.choi.doit.domain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

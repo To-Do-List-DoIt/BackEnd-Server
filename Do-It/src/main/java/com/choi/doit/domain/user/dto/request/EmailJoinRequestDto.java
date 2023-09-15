@@ -1,6 +1,6 @@
 package com.choi.doit.domain.user.dto.request;
 
-import com.choi.doit.domain.model.UserEntity;
+import com.choi.doit.domain.user.domain.UserEntity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
