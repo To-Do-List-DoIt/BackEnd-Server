@@ -63,21 +63,21 @@ public class TodoApi {
     public ResponseEntity<ResponseDto> getDay(@RequestParam @NotNull String date) {
         DayTodoDto dayTodoDto = todoRService.readDay(date);
 
-        return ResponseEntity.status(201).body(DataResponseDto.of(dayTodoDto, 201));
+        return ResponseEntity.ok(DataResponseDto.of(dayTodoDto, 200));
     }
 
     @GetMapping("/day")
     public ResponseEntity<ResponseDto> getDayCategory(@RequestParam @NotNull String date, @RequestParam @NotNull String category) {
         CategoryDayTodoDto categoryDayTodoDto = todoRService.readCategoryDay(category, date);
 
-        return ResponseEntity.status(201).body(DataResponseDto.of(categoryDayTodoDto, 201));
+        return ResponseEntity.ok(DataResponseDto.of(categoryDayTodoDto, 200));
     }
 
     @GetMapping("/month")
     public ResponseEntity<ResponseDto> getMonthCount(@RequestParam @NotNull String date) {
         MonthCountDto monthCountDto = todoRService.readMonthCount(date);
 
-        return ResponseEntity.status(201).body(DataResponseDto.of(monthCountDto, 201));
+        return ResponseEntity.ok(DataResponseDto.of(monthCountDto, 200));
     }
 
     @GetMapping("/category")
@@ -91,7 +91,7 @@ public class TodoApi {
     public ResponseEntity<ResponseDto> addNewCategory(AddCategoryRequestDto addCategoryRequestDto) {
         AddCategoryResponseDto addCategoryResponseDto = todoCategoryService.addNew(addCategoryRequestDto);
 
-        return ResponseEntity.created(URI.create("/category/" + addCategoryResponseDto.getCategory_id())).body(DataResponseDto.of(addCategoryResponseDto.getDto(), 201));
+        return ResponseEntity.created(URI.create("/category/" + addCategoryResponseDto.getCategory_id())).body(DataResponseDto.of(addCategoryResponseDto.getDetail(), 201));
     }
 
     @PatchMapping("/category/{category-id}")
