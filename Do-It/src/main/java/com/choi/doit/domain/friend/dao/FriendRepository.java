@@ -14,4 +14,6 @@ public interface FriendRepository extends JpaRepository<FriendEntity, Long> {
             "from Friend f " +
             "where f.user = :user")
     ArrayList<FriendItemDto> findAllByUser(UserEntity user);
+
+    Boolean existsByUserAndFriendUser(UserEntity user, UserEntity friendUser);
 }

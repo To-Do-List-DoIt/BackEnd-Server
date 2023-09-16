@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum FriendErrorCode implements ErrorCode {
+    FRIEND_NOT_FOUND(HttpStatus.NOT_FOUND, "Friend not found."),
     GUEST_ACCESS_FORBIDDEN(HttpStatus.FORBIDDEN, "Guest user is not allowed to access friends."),
     TARGET_FORBIDDEN(HttpStatus.FORBIDDEN, "<Target is guest user.> Guest user is not allowed to access friends."),
     REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "Request required."),
