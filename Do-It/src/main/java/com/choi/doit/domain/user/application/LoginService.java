@@ -2,6 +2,7 @@ package com.choi.doit.domain.user.application;
 
 import com.choi.doit.domain.model.Provider;
 import com.choi.doit.domain.model.Role;
+import com.choi.doit.domain.todo.application.TodoDefaultSettingService;
 import com.choi.doit.domain.user.dao.UserRepository;
 import com.choi.doit.domain.user.domain.UserEntity;
 import com.choi.doit.domain.user.dto.response.LoginResponseDto;
@@ -14,12 +15,12 @@ import com.choi.doit.global.util.RedisUtil;
 import com.choi.doit.global.util.SecurityContextUtil;
 import com.choi.doit.global.util.jwt.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -35,6 +36,7 @@ public class LoginService {
     private final RedisUtil redisUtil;
     private final SecurityContextUtil securityContextUtil;
     private final GoogleOAuth googleOAuth;
+    private final TodoDefaultSettingService todoDefaultSettingService;
 
     public String getIdToken(HttpServletRequest request) throws AuthenticationServiceException {
         String id_token = Arrays.stream(request.getQueryString().split("id-token=")).toList().get(1);
@@ -57,6 +59,7 @@ public class LoginService {
     }
 
     // 게스트 로그인
+    @Transactional
     public LoginResponseDto guestLogin() {
         // 랜덤 이메일 생성
         String email = randomUtil.getRandomUsername();
@@ -65,10 +68,14 @@ public class LoginService {
         // 데이터 등록
         UserEntity user = userRepository.save(new UserEntity(email, password));
 
+        // 기본 카테고리 생성
+        todoDefaultSettingService.addDefaultCategory(user);
+
         return jwtUtil.generateTokens(user);
     }
 
     // 구글 로그인
+    @Transactional
     public UserEntity googleAuth(String authorization, String id_token) throws GeneralSecurityException, IOException {
         UserEntity user = null;
         if (authorization != null)
@@ -83,14 +90,19 @@ public class LoginService {
         // 랜덤 값 생성
         String password = randomUtil.getRandomPassword(15, true);
 
-        // 회원 데이터 조회, 새 회원이면 데이터 생성
+        // 회원 데이터 조회, 새 회원이면 데이터 생성 + 기본 카테고리 데이터 생성
         if (user == null) {
-            return userRepository.findByEmail(email)
+            UserEntity newUser = userRepository.findByEmail(email)
                     .orElseGet(() -> userRepository.save(UserEntity.builder()
                             .email(email)
                             .password(password)
                             .provider(provider)
                             .build()));
+
+            // 기본 카테고리 생성
+            todoDefaultSettingService.addDefaultCategory(newUser);
+
+            return newUser;
         } else {
             dto.setPassword(password);
 
@@ -99,6 +111,7 @@ public class LoginService {
     }
 
     // 로그아웃
+    @Transactional
     public void logout() throws RestApiException {
         UserEntity user = securityContextUtil.getUserEntity();
 
