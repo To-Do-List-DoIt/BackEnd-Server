@@ -1,7 +1,7 @@
-package com.choi.doit.domain.model;
+package com.choi.doit.domain.user.domain;
 
-import com.choi.doit.domain.user.domain.Provider;
-import com.choi.doit.domain.user.domain.Role;
+import com.choi.doit.domain.model.Provider;
+import com.choi.doit.domain.model.Role;
 import com.choi.doit.domain.user.dto.request.EmailJoinRequestDto;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;

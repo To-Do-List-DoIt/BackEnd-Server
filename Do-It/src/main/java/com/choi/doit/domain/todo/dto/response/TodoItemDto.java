@@ -1,6 +1,6 @@
 package com.choi.doit.domain.todo.dto.response;
 
-import com.choi.doit.domain.model.TodoEntity;
+import com.choi.doit.domain.todo.domain.TodoEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

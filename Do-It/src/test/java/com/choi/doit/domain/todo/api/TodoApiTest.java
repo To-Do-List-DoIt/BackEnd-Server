@@ -1,11 +1,11 @@
 package com.choi.doit.domain.todo.api;
 
-import com.choi.doit.domain.model.CategoryEntity;
-import com.choi.doit.domain.model.TodoEntity;
-import com.choi.doit.domain.model.UserEntity;
 import com.choi.doit.domain.todo.dao.CategoryRepository;
 import com.choi.doit.domain.todo.dao.TodoRepository;
+import com.choi.doit.domain.todo.domain.CategoryEntity;
+import com.choi.doit.domain.todo.domain.TodoEntity;
 import com.choi.doit.domain.user.dao.UserRepository;
+import com.choi.doit.domain.user.domain.UserEntity;
 import com.choi.doit.domain.user.dto.request.EmailJoinRequestDto;
 import com.choi.doit.global.util.jwt.JwtUtil;
 import lombok.extern.slf4j.Slf4j;

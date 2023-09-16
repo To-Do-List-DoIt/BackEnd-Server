@@ -1,6 +1,6 @@
 package com.choi.doit.global.util.jwt.filter;
 
-import com.choi.doit.domain.model.UserEntity;
+import com.choi.doit.domain.user.domain.UserEntity;
 import com.choi.doit.domain.user.dto.response.LoginResponseDto;
 import com.choi.doit.global.error.exception.RestApiException;
 import com.choi.doit.global.error.exception.SpringSecurityException;

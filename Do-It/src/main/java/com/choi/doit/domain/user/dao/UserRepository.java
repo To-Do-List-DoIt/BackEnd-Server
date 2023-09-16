@@ -1,7 +1,7 @@
 package com.choi.doit.domain.user.dao;
 
-import com.choi.doit.domain.model.UserEntity;
-import com.choi.doit.domain.user.domain.Role;
+import com.choi.doit.domain.model.Role;
+import com.choi.doit.domain.user.domain.UserEntity;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
