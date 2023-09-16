@@ -36,9 +36,7 @@ class FriendServiceTest {
     final String email = "abc@abc.com";
     final String password = "password1234";
     UserEntity friend1;
-    UserEntity friend2;
     final String friend1Email = "friend1@abc.com";
-    final String friend2Email = "friend2@abc.com";
 
     @Autowired
     FriendServiceTest(FriendService friendService, UserRepository userRepository, FriendRequestRepository friendRequestRepository, FriendRepository friendRepository) {
@@ -55,7 +53,6 @@ class FriendServiceTest {
 
         // friends
         friend1 = userRepository.save(new EmailJoinRequestDto(friend1Email, password, null).toEntity(null));
-        friend2 = userRepository.save(new EmailJoinRequestDto(friend2Email, password, null).toEntity(null));
     }
 
     @DisplayName("친구 신청")
@@ -128,6 +125,7 @@ class FriendServiceTest {
     void getList() {
         // given
         friendRepository.save(new FriendEntity(user, friend1));
+        friendRepository.save(new FriendEntity(friend1, user));
 
         // when
         FriendListDto friendListDto = friendService.getList();
