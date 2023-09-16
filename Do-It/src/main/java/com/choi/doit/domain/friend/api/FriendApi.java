@@ -6,6 +6,7 @@ import com.choi.doit.domain.friend.dto.FriendRequestDto;
 import com.choi.doit.domain.friend.dto.FriendResponseDto;
 import com.choi.doit.global.common.response.DataResponseDto;
 import com.choi.doit.global.common.response.ResponseDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class FriendApi {
 
     // 친구 신청
     @PostMapping("/request")
-    public ResponseEntity<ResponseDto> requestFriend(@RequestBody FriendRequestDto friendRequestDto) {
+    public ResponseEntity<ResponseDto> requestFriend(@RequestBody @Valid FriendRequestDto friendRequestDto) {
         FriendResponseDto friendResponseDto = friendService.requestFriend(friendRequestDto);
 
         return ResponseEntity.status(201).body(DataResponseDto.of(friendResponseDto, 201));
@@ -28,7 +29,7 @@ public class FriendApi {
 
     // 친구 수락
     @PostMapping
-    public ResponseEntity<ResponseDto> acceptFriend(@RequestBody FriendRequestDto friendRequestDto) {
+    public ResponseEntity<ResponseDto> acceptFriend(@RequestBody @Valid FriendRequestDto friendRequestDto) {
         FriendResponseDto friendResponseDto = friendService.acceptFriend(friendRequestDto);
 
         return ResponseEntity.status(201).body(DataResponseDto.of(friendResponseDto, 201));
@@ -39,7 +40,7 @@ public class FriendApi {
     public ResponseEntity<ResponseDto> getSentRequestList() {
         FriendListDto friendListDto = friendService.getSentRequestList();
 
-        return ResponseEntity.ok().body(DataResponseDto.of(friendListDto, 200));
+        return ResponseEntity.ok(DataResponseDto.of(friendListDto, 200));
     }
 
     // 친구 신청 수신 내역 조회
@@ -47,7 +48,7 @@ public class FriendApi {
     public ResponseEntity<ResponseDto> getReceivedRequestList() {
         FriendListDto friendListDto = friendService.getReceivedRequestList();
 
-        return ResponseEntity.ok().body(DataResponseDto.of(friendListDto, 200));
+        return ResponseEntity.ok(DataResponseDto.of(friendListDto, 200));
     }
 
     // 친구 내역 조회
@@ -55,6 +56,6 @@ public class FriendApi {
     public ResponseEntity<ResponseDto> getList() {
         FriendListDto friendListDto = friendService.getList();
 
-        return ResponseEntity.ok().body(DataResponseDto.of(friendListDto, 200));
+        return ResponseEntity.ok(DataResponseDto.of(friendListDto, 200));
     }
 }
