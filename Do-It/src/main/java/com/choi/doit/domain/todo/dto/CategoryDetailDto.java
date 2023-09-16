@@ -1,6 +1,6 @@
 package com.choi.doit.domain.todo.dto;
 
-import com.choi.doit.domain.model.CategoryEntity;
+import com.choi.doit.domain.todo.domain.CategoryEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

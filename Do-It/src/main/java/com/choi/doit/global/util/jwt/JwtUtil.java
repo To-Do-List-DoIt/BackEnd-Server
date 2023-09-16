@@ -1,7 +1,7 @@
 package com.choi.doit.global.util.jwt;
 
-import com.choi.doit.domain.model.UserEntity;
 import com.choi.doit.domain.user.dao.UserRepository;
+import com.choi.doit.domain.user.domain.UserEntity;
 import com.choi.doit.domain.user.dto.response.LoginResponseDto;
 import com.choi.doit.domain.user.vo.GenerateTokenVo;
 import com.choi.doit.global.config.JwtProperties;

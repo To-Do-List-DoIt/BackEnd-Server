@@ -1,6 +1,6 @@
 package com.choi.doit.domain.todo.dto.response;
 
-import com.choi.doit.domain.model.TodoEntity;
+import com.choi.doit.domain.todo.domain.TodoEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,7 +17,7 @@ public class TodoItemDto {
     private String content;
     private LocalDate date;
     private LocalTime time;
-    private boolean checked;
+    private Boolean checked;
 
     public TodoItemDto(TodoEntity todo) {
         this.todo_id = todo.getId();
@@ -25,6 +25,6 @@ public class TodoItemDto {
         this.content = todo.getContent();
         this.date = todo.getDate();
         this.time = todo.getTime();
-        this.checked = todo.is_checked();
+        this.checked = todo.getCheckStatus();
     }
 }

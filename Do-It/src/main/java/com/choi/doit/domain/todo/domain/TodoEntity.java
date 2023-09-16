@@ -1,5 +1,6 @@
-package com.choi.doit.domain.model;
+package com.choi.doit.domain.todo.domain;
 
+import com.choi.doit.domain.user.domain.UserEntity;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import lombok.*;
@@ -31,7 +32,7 @@ public class TodoEntity {
     private CategoryEntity category;
     private LocalDate date;
     private LocalTime time;
-    private boolean is_checked;
+    private Boolean checkStatus;
     @CreationTimestamp
     private LocalDateTime created_at;
     @UpdateTimestamp
@@ -43,14 +44,14 @@ public class TodoEntity {
         this.category = category;
         this.date = date;
         this.time = time;
-        is_checked = false;
+        checkStatus = false;
     }
 
     @Transactional
     public boolean updateIsChecked() {
-        this.is_checked = !is_checked;
+        this.checkStatus = !checkStatus;
 
-        return is_checked;
+        return checkStatus;
     }
 
     @Transactional

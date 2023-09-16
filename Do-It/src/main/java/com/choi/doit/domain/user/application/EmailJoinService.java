@@ -1,9 +1,10 @@
 package com.choi.doit.domain.user.application;
 
-import com.choi.doit.domain.model.UserEntity;
+import com.choi.doit.domain.model.EmailAuthKeyEnum;
+import com.choi.doit.domain.model.Role;
+import com.choi.doit.domain.todo.application.TodoDefaultSettingService;
 import com.choi.doit.domain.user.dao.UserRepository;
-import com.choi.doit.domain.user.domain.EmailAuthKeyEnum;
-import com.choi.doit.domain.user.domain.Role;
+import com.choi.doit.domain.user.domain.UserEntity;
 import com.choi.doit.domain.user.dto.request.*;
 import com.choi.doit.domain.user.dto.response.EmailAuthInfoResponseDto;
 import com.choi.doit.domain.user.dto.response.EmailAuthResponseDto;
@@ -47,6 +48,7 @@ public class EmailJoinService {
     private final ImageHandler imageHandler;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final TodoDefaultSettingService todoDefaultSettingService;
 
     @Transactional
     public Long setGuestInfo(UserEntity user, EmailJoinRequestDto dto, String profile_path) {
@@ -180,10 +182,15 @@ public class EmailJoinService {
         // 비밀번호 암호화
         emailJoinRequestDto.setPassword(passwordEncoder.encode(password));
 
-        // 유저 데이터 저장
-        if (user == null)
-            return new EmailJoinResponseDto(userRepository.save(emailJoinRequestDto.toEntity(profile_path)).getId());
-        else
+        // 유저 데이터 저장 + 기본 카테고리 저장
+        if (user == null) {
+            UserEntity newUser = userRepository.save(emailJoinRequestDto.toEntity(profile_path));
+
+            // 기본 카테고리 저장
+            todoDefaultSettingService.addDefaultCategory(newUser);
+
+            return new EmailJoinResponseDto(newUser.getId());
+        } else
             return new EmailJoinResponseDto(setGuestInfo(user, emailJoinRequestDto, profile_path));
     }
 

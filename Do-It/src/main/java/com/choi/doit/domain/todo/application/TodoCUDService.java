@@ -1,15 +1,15 @@
 package com.choi.doit.domain.todo.application;
 
-import com.choi.doit.domain.model.CategoryEntity;
-import com.choi.doit.domain.model.TodoEntity;
-import com.choi.doit.domain.model.UserEntity;
 import com.choi.doit.domain.todo.dao.CategoryRepository;
 import com.choi.doit.domain.todo.dao.TodoRepository;
+import com.choi.doit.domain.todo.domain.CategoryEntity;
+import com.choi.doit.domain.todo.domain.TodoEntity;
 import com.choi.doit.domain.todo.dto.request.EditTodoRequestDto;
 import com.choi.doit.domain.todo.dto.request.NewTodoRequestDto;
 import com.choi.doit.domain.todo.dto.response.CheckResponseDto;
 import com.choi.doit.domain.todo.dto.response.NewTodoResponseDto;
 import com.choi.doit.domain.todo.exception.TodoErrorCode;
+import com.choi.doit.domain.user.domain.UserEntity;
 import com.choi.doit.global.error.exception.RestApiException;
 import com.choi.doit.global.util.DatetimeUtil;
 import com.choi.doit.global.util.SecurityContextUtil;

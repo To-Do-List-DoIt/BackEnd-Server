@@ -1,13 +1,13 @@
 package com.choi.doit.domain.todo.application;
 
-import com.choi.doit.domain.model.CategoryEntity;
-import com.choi.doit.domain.model.UserEntity;
 import com.choi.doit.domain.todo.dao.CategoryRepository;
+import com.choi.doit.domain.todo.domain.CategoryEntity;
 import com.choi.doit.domain.todo.dto.CategoryDetailDto;
 import com.choi.doit.domain.todo.dto.CategoryListItemDto;
 import com.choi.doit.domain.todo.dto.request.AddCategoryRequestDto;
 import com.choi.doit.domain.todo.dto.request.EditCategoryRequestDto;
 import com.choi.doit.domain.user.dao.UserRepository;
+import com.choi.doit.domain.user.domain.UserEntity;
 import com.choi.doit.domain.user.dto.request.EmailJoinRequestDto;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;

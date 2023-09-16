@@ -32,6 +32,4 @@ public class LoginApi {
 
         return ResponseEntity.ok(ResponseDto.of(200));
     }
-
-    // 회원탈퇴
 }

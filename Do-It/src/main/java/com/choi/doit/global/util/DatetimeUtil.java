@@ -28,6 +28,21 @@ public class DatetimeUtil {
         }
     }
 
+    public LocalDate parseYearMonth(String str) throws RestApiException {
+        String[] date = str.split("-");
+
+        try {
+            int year = date[0].length() == 4 ? Integer.parseInt(date[0]) : Integer.parseInt(20 + date[0]);
+            int month = Integer.parseInt(date[1]);
+
+            return LocalDate.of(year, month, 1);
+        } catch (NumberFormatException | DateTimeException e) {
+            log.error(e.getMessage());
+
+            throw new RestApiException(GlobalErrorCode.INVALID_DATE_FORMAT);
+        }
+    }
+
     public LocalTime parseTime(String str) throws RestApiException {
         String[] time = str.split(":");
 

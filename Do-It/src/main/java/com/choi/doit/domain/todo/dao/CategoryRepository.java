@@ -1,8 +1,8 @@
 package com.choi.doit.domain.todo.dao;
 
-import com.choi.doit.domain.model.CategoryEntity;
-import com.choi.doit.domain.model.UserEntity;
+import com.choi.doit.domain.todo.domain.CategoryEntity;
 import com.choi.doit.domain.todo.dto.CategoryListItemDto;
+import com.choi.doit.domain.user.domain.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

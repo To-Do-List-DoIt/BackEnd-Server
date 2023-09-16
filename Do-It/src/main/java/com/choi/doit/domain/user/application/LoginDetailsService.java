@@ -1,7 +1,7 @@
 package com.choi.doit.domain.user.application;
 
-import com.choi.doit.domain.model.UserEntity;
 import com.choi.doit.domain.user.dao.UserRepository;
+import com.choi.doit.domain.user.domain.UserEntity;
 import com.choi.doit.domain.user.exception.UserErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

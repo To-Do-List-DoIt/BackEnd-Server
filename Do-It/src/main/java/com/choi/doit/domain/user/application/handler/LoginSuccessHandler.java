@@ -1,7 +1,7 @@
 package com.choi.doit.domain.user.application.handler;
 
-import com.choi.doit.domain.model.UserEntity;
 import com.choi.doit.domain.user.dao.UserRepository;
+import com.choi.doit.domain.user.domain.UserEntity;
 import com.choi.doit.domain.user.dto.response.LoginResponseDto;
 import com.choi.doit.global.error.GlobalErrorCode;
 import com.choi.doit.global.error.exception.SpringSecurityException;

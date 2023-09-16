@@ -1,7 +1,7 @@
 package com.choi.doit.domain.user.application.filter;
 
-import com.choi.doit.domain.model.UserEntity;
 import com.choi.doit.domain.user.application.LoginService;
+import com.choi.doit.domain.user.domain.UserEntity;
 import com.choi.doit.domain.user.dto.request.EmailLoginRequestDto;
 import com.choi.doit.global.error.GlobalErrorCode;
 import com.fasterxml.jackson.databind.ObjectMapper;

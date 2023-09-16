@@ -1,9 +1,10 @@
-package com.choi.doit.domain.model;
+package com.choi.doit.domain.user.domain;
 
-import com.choi.doit.domain.user.domain.Provider;
-import com.choi.doit.domain.user.domain.Role;
+import com.choi.doit.domain.model.Provider;
+import com.choi.doit.domain.model.Role;
 import com.choi.doit.domain.user.dto.request.EmailJoinRequestDto;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -68,5 +69,20 @@ public class UserEntity {
     @Override
     public int hashCode() {
         return Objects.hash(email);
+    }
+
+    @Transactional
+    public void updateEmail(String email) {
+        this.email = email;
+    }
+
+    @Transactional
+    public void updatePassword(String password) {
+        this.password = password;
+    }
+
+    @Transactional
+    public void updateProfileImage(String profile_image_path) {
+        this.profile_image_path = profile_image_path;
     }
 }

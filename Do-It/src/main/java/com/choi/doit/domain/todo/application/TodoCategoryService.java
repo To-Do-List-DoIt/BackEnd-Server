@@ -1,14 +1,14 @@
 package com.choi.doit.domain.todo.application;
 
-import com.choi.doit.domain.model.CategoryEntity;
-import com.choi.doit.domain.model.UserEntity;
 import com.choi.doit.domain.todo.dao.CategoryRepository;
+import com.choi.doit.domain.todo.domain.CategoryEntity;
 import com.choi.doit.domain.todo.dto.CategoryDetailDto;
 import com.choi.doit.domain.todo.dto.CategoryListItemDto;
 import com.choi.doit.domain.todo.dto.request.AddCategoryRequestDto;
 import com.choi.doit.domain.todo.dto.request.EditCategoryRequestDto;
 import com.choi.doit.domain.todo.dto.response.AddCategoryResponseDto;
 import com.choi.doit.domain.todo.exception.TodoErrorCode;
+import com.choi.doit.domain.user.domain.UserEntity;
 import com.choi.doit.global.error.exception.RestApiException;
 import com.choi.doit.global.util.SecurityContextUtil;
 import lombok.RequiredArgsConstructor;

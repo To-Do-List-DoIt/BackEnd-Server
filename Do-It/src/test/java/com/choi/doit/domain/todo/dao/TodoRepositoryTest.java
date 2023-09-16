@@ -1,10 +1,10 @@
 package com.choi.doit.domain.todo.dao;
 
-import com.choi.doit.domain.model.CategoryEntity;
-import com.choi.doit.domain.model.TodoEntity;
-import com.choi.doit.domain.model.UserEntity;
+import com.choi.doit.domain.todo.domain.CategoryEntity;
+import com.choi.doit.domain.todo.domain.TodoEntity;
 import com.choi.doit.domain.todo.dto.TodoCountDto;
 import com.choi.doit.domain.user.dao.UserRepository;
+import com.choi.doit.domain.user.domain.UserEntity;
 import com.choi.doit.domain.user.dto.request.EmailJoinRequestDto;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
