@@ -1,8 +1,8 @@
 package com.choi.doit.domain.todo.application;
 
-import com.choi.doit.domain.model.CategoryEntity;
-import com.choi.doit.domain.model.UserEntity;
 import com.choi.doit.domain.todo.dao.CategoryRepository;
+import com.choi.doit.domain.todo.domain.CategoryEntity;
+import com.choi.doit.domain.user.domain.UserEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class TodoDefaultSettingService {
     private final CategoryRepository categoryRepository;
-    
+
     // 기본 카테고리 추가
     @Transactional
     public void addDefaultCategory(UserEntity user) {
