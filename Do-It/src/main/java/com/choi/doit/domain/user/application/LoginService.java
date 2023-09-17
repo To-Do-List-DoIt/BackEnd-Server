@@ -50,11 +50,10 @@ public class LoginService {
 
     @Transactional
     public UserEntity setGuestOAuthInfo(UserEntity user, OAuthUserInfoDto dto) {
-        Long user_id = user.getId();
-
-        userRepository.updateRole(Role.MEMBER, user_id);
-        userRepository.updateEmail(dto.getEmail(), user_id);
-        userRepository.updatePassword(dto.getPassword(), user_id);
+        user.updateRole(Role.MEMBER);
+        user.updateEmail(dto.getEmail());
+        user.updatePassword(dto.getPassword());
+        user.updateNickname(dto.getNickname());
 
         return userRepository.findByEmail(dto.getEmail()).orElse(null);
     }

@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public class GuestLoginResponseDto {
     private Long user_id;
-    private String code;
+    private String user_code;
     private String access_token;
     private String refresh_token;
 }

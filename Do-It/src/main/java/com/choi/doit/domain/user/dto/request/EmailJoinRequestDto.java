@@ -19,8 +19,13 @@ public class EmailJoinRequestDto {
 
     @NotBlank
     @NotNull
-    @Size(min = 5, max = 20)
+    @Size(min = 8, max = 20)
     private String password;
+
+    @NotBlank
+    @NotNull
+    @Size(min = 2, max = 10)
+    private String nickname;
 
     public UserEntity toEntity() {
         return new UserEntity(this);

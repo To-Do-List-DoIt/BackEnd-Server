@@ -32,6 +32,7 @@ class MyPageServiceTest {
     final PasswordEncoder passwordEncoder;
     final String email = "abc@abc.com";
     final String password = "password1234";
+    final String nickname = "genius";
 
     @Autowired
     MyPageServiceTest(MyPageService myPageService, UserRepository userRepository, RedisUtil redisUtil, PasswordEncoder passwordEncoder) {
@@ -42,7 +43,7 @@ class MyPageServiceTest {
     }
 
     void addData() {
-        userRepository.save(new EmailJoinRequestDto(email, password).toEntity());
+        userRepository.save(new EmailJoinRequestDto(email, password, nickname).toEntity());
     }
 
     @DisplayName("계정 삭제")
@@ -50,7 +51,7 @@ class MyPageServiceTest {
     @Test
     void deleteUser() {
         // given
-        Long id = userRepository.save(new EmailJoinRequestDto(email, password).toEntity()).getId();
+        Long id = userRepository.save(new EmailJoinRequestDto(email, password, nickname).toEntity()).getId();
         String KEY_SUFFIX = "_refresh";
 
         // when
@@ -69,7 +70,7 @@ class MyPageServiceTest {
     void setProfileImage() throws IOException {
         // given
         MockMultipartFile file = new MockMultipartFile("profile", "car.jpeg", "image/jpeg", new ClassPathResource("car.jpeg").getInputStream());
-        UserEntity user = userRepository.save(new EmailJoinRequestDto(email, password).toEntity());
+        UserEntity user = userRepository.save(new EmailJoinRequestDto(email, password, nickname).toEntity());
 
         // when
         myPageService.setProfileImage(file);
@@ -83,7 +84,7 @@ class MyPageServiceTest {
     @Test
     void setEmail() {
         // given
-        UserEntity user = userRepository.save(new EmailJoinRequestDto(email, password).toEntity());
+        UserEntity user = userRepository.save(new EmailJoinRequestDto(email, password, nickname).toEntity());
         String new_email = "new_email@abc.com";
 
         // when
@@ -98,7 +99,7 @@ class MyPageServiceTest {
     @Test
     void setPassword() throws Exception {
         // given
-        UserEntity user = userRepository.save(new EmailJoinRequestDto(email, password).toEntity());
+        UserEntity user = userRepository.save(new EmailJoinRequestDto(email, password, nickname).toEntity());
         String new_password = "newPassword123@";
 
         // when

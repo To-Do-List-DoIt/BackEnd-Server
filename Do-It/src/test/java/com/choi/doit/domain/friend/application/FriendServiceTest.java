@@ -35,8 +35,10 @@ class FriendServiceTest {
     UserEntity user;
     final String email = "abc@abc.com";
     final String password = "password1234";
+    final String nickname = "genius";
     UserEntity friend1;
     final String friend1Email = "friend1@abc.com";
+    final String friend1Nickname = "friend";
 
     @Autowired
     FriendServiceTest(FriendService friendService, UserRepository userRepository, FriendRequestRepository friendRequestRepository, FriendRepository friendRepository) {
@@ -49,10 +51,10 @@ class FriendServiceTest {
     @BeforeEach
     void addMockData() {
         // user
-        user = userRepository.save(new EmailJoinRequestDto(email, password).toEntity());
+        user = userRepository.save(new EmailJoinRequestDto(email, password, nickname).toEntity());
 
         // friends
-        friend1 = userRepository.save(new EmailJoinRequestDto(friend1Email, password).toEntity());
+        friend1 = userRepository.save(new EmailJoinRequestDto(friend1Email, password, friend1Nickname).toEntity());
     }
 
     @DisplayName("친구 신청")

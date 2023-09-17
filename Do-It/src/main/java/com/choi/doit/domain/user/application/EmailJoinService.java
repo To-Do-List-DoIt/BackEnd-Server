@@ -13,7 +13,10 @@ import com.choi.doit.domain.user.exception.UserErrorCode;
 import com.choi.doit.domain.user.vo.EmailVo;
 import com.choi.doit.domain.user.vo.NicknameVo;
 import com.choi.doit.global.error.exception.RestApiException;
-import com.choi.doit.global.util.*;
+import com.choi.doit.global.util.DuplicateCheckUtil;
+import com.choi.doit.global.util.MailUtil;
+import com.choi.doit.global.util.RandomUtil;
+import com.choi.doit.global.util.RedisUtil;
 import com.choi.doit.global.util.jwt.JwtUtil;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotEmpty;
@@ -44,7 +47,6 @@ public class EmailJoinService {
     private final SpringTemplateEngine springTemplateEngine;
     private final RandomUtil randomUtil;
     private final RedisTemplate<String, Object> redisTemplate;
-    private final ImageHandler imageHandler;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final TodoDefaultSettingService todoDefaultSettingService;
@@ -52,12 +54,11 @@ public class EmailJoinService {
     @Transactional
     public Long setGuestInfo(UserEntity user, EmailJoinRequestDto dto) {
         Long user_id = user.getId();
-        String email = dto.getEmail();
-        String password = dto.getPassword();
 
-        userRepository.updateRole(Role.MEMBER, user_id);
-        userRepository.updateEmail(email, user_id);
-        userRepository.updatePassword(password, user_id);
+        user.updateRole(Role.MEMBER);
+        user.updateEmail(dto.getEmail());
+        user.updatePassword(dto.getPassword());
+        user.updateNickname(dto.getNickname());
 
         return user_id;
     }
@@ -159,10 +160,11 @@ public class EmailJoinService {
     public EmailJoinResponseDto join(String authorization, EmailJoinRequestDto emailJoinRequestDto) throws IOException {
         UserEntity user = null;
         if (authorization != null)
-            user = jwtUtil.validateAccessToken(authorization);
+            user = jwtUtil.validateAccessToken(jwtUtil.decodeBearer(authorization));
 
         String email = emailJoinRequestDto.getEmail();
         String password = emailJoinRequestDto.getPassword();
+        String nickname = emailJoinRequestDto.getNickname();
 
         // 인증 여부 조회
         if (!isAuthenticated(emailJoinRequestDto.getEmail()))
@@ -170,6 +172,9 @@ public class EmailJoinService {
 
         // 이메일 중복 검사
         duplicateCheckUtil.isDupEmail(email);
+
+        // 닉네임 중복 검사
+        duplicateCheckUtil.isDupNickname(nickname);
 
         // 비밀번호 암호화
         emailJoinRequestDto.setPassword(passwordEncoder.encode(password));
@@ -195,7 +200,7 @@ public class EmailJoinService {
             duplicateCheckUtil.isDupEmail(vo);
         } else if (type.equals("nickname")) {
             NicknameVo vo = new NicknameVo(value);
-            // duplicateCheckUtil.isDupNickname(vo);
+            duplicateCheckUtil.isDupNickname(vo);
         } else {
             throw new RestApiException(UserErrorCode.INVALID_TYPE);
         }

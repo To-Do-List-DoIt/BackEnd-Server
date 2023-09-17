@@ -12,5 +12,6 @@ public class OAuthUserInfoDto {
     private Provider provider;
     private String email;
     private String password;
+    private String nickname;
     private String profile_image_path;
 }

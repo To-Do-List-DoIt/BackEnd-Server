@@ -45,6 +45,7 @@ class FriendTodoServiceTest {
     UserEntity user;
     final String EMAIL = "abc@abc.com";
     final String PASSWORD = "password1234";
+    final String NICKNAME = "genius";
     UserEntity friend1;
     final String FRIEND_EMAIL = "friend1@abc.com";
     final String CATEGORY_KEY = "category_test";
@@ -63,10 +64,10 @@ class FriendTodoServiceTest {
     @BeforeEach
     void addMockData() {
         // UserEntity
-        user = userRepository.save(new EmailJoinRequestDto(EMAIL, PASSWORD).toEntity());
+        user = userRepository.save(new EmailJoinRequestDto(EMAIL, PASSWORD, NICKNAME).toEntity());
 
         // FriendUserEntity
-        friend1 = userRepository.save(new EmailJoinRequestDto(FRIEND_EMAIL, PASSWORD).toEntity());
+        friend1 = userRepository.save(new EmailJoinRequestDto(FRIEND_EMAIL, PASSWORD, NICKNAME).toEntity());
 
         // Set friend
         friendRepository.save(new FriendEntity(user, friend1));

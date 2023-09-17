@@ -31,6 +31,7 @@ class TodoCategoryServiceTest {
     private final TodoCategoryService todoCategoryService;
     final String email = "abc@abc.com";
     final String password = "password1234";
+    final String nickname = "genius";
     final String name = "Study";
     final String color = "FF0000";
     final Boolean is_private = false;
@@ -43,7 +44,7 @@ class TodoCategoryServiceTest {
     }
 
     void addData() {
-        UserEntity user = new EmailJoinRequestDto(email, password).toEntity();
+        UserEntity user = new EmailJoinRequestDto(email, password, nickname).toEntity();
         CategoryEntity category = new CategoryEntity(user, name, color, is_private);
         categoryRepository.save(category);
     }
@@ -68,7 +69,7 @@ class TodoCategoryServiceTest {
     @Test
     void addNew() throws Exception {
         // given
-        UserEntity user = new EmailJoinRequestDto(email, password).toEntity();
+        UserEntity user = new EmailJoinRequestDto(email, password, nickname).toEntity();
         AddCategoryRequestDto dto = new AddCategoryRequestDto(name, color, is_private);
 
         // when
@@ -87,7 +88,7 @@ class TodoCategoryServiceTest {
     @Test
     void modify() throws Exception {
         // given
-        UserEntity user = userRepository.save(new EmailJoinRequestDto(email, password).toEntity());
+        UserEntity user = userRepository.save(new EmailJoinRequestDto(email, password, nickname).toEntity());
         CategoryEntity category = new CategoryEntity(user, name, color, is_private);
         Long id = categoryRepository.save(category).getId();
 
@@ -111,7 +112,7 @@ class TodoCategoryServiceTest {
     @Test
     void remove() {
         // given
-        UserEntity user = userRepository.save(new EmailJoinRequestDto(email, password).toEntity());
+        UserEntity user = userRepository.save(new EmailJoinRequestDto(email, password, nickname).toEntity());
         CategoryEntity category = new CategoryEntity(user, name, color, is_private);
         Long id = categoryRepository.save(category).getId();
 
