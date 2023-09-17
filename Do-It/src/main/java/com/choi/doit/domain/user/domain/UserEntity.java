@@ -42,11 +42,10 @@ public class UserEntity {
         this.password = password;
     }
 
-    public UserEntity(EmailJoinRequestDto emailJoinRequestDto, String profile_image_path) {
+    public UserEntity(EmailJoinRequestDto emailJoinRequestDto) {
         role = Role.MEMBER;
         this.email = emailJoinRequestDto.getEmail();
         this.password = emailJoinRequestDto.getPassword();
-        this.profile_image_path = profile_image_path;
     }
 
     // For oauth2 user

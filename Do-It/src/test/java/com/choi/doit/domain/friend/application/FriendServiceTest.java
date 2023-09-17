@@ -49,10 +49,10 @@ class FriendServiceTest {
     @BeforeEach
     void addMockData() {
         // user
-        user = userRepository.save(new EmailJoinRequestDto(email, password, null).toEntity(null));
+        user = userRepository.save(new EmailJoinRequestDto(email, password).toEntity());
 
         // friends
-        friend1 = userRepository.save(new EmailJoinRequestDto(friend1Email, password, null).toEntity(null));
+        friend1 = userRepository.save(new EmailJoinRequestDto(friend1Email, password).toEntity());
     }
 
     @DisplayName("친구 신청")

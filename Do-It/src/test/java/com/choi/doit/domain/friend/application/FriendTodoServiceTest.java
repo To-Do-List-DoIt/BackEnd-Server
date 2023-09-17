@@ -63,10 +63,10 @@ class FriendTodoServiceTest {
     @BeforeEach
     void addMockData() {
         // UserEntity
-        user = userRepository.save(new EmailJoinRequestDto(EMAIL, PASSWORD, null).toEntity(null));
+        user = userRepository.save(new EmailJoinRequestDto(EMAIL, PASSWORD).toEntity());
 
         // FriendUserEntity
-        friend1 = userRepository.save(new EmailJoinRequestDto(FRIEND_EMAIL, PASSWORD, null).toEntity(null));
+        friend1 = userRepository.save(new EmailJoinRequestDto(FRIEND_EMAIL, PASSWORD).toEntity());
 
         // Set friend
         friendRepository.save(new FriendEntity(user, friend1));

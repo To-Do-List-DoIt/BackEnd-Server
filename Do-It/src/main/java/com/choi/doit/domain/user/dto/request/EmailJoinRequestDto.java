@@ -8,7 +8,6 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -23,9 +22,7 @@ public class EmailJoinRequestDto {
     @Size(min = 5, max = 20)
     private String password;
 
-    private MultipartFile profile;
-
-    public UserEntity toEntity(String profile_image_path) {
-        return new UserEntity(this, profile_image_path);
+    public UserEntity toEntity() {
+        return new UserEntity(this);
     }
 }

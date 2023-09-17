@@ -44,7 +44,7 @@ class TodoRepositoryTest {
 
     @BeforeEach
     void addTodoData() {
-        UserEntity user = new UserEntity(new EmailJoinRequestDto(email, password, null), null);
+        UserEntity user = new EmailJoinRequestDto(email, password).toEntity();
         userRepository.save(user);
 
         CategoryEntity category = new CategoryEntity(user, categoryStr, "FF0000");

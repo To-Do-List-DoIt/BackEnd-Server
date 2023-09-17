@@ -43,7 +43,7 @@ class TodoCategoryServiceTest {
     }
 
     void addData() {
-        UserEntity user = userRepository.save(new UserEntity(new EmailJoinRequestDto(email, password, null), null));
+        UserEntity user = new EmailJoinRequestDto(email, password).toEntity();
         CategoryEntity category = new CategoryEntity(user, name, color, is_private);
         categoryRepository.save(category);
     }
@@ -68,7 +68,7 @@ class TodoCategoryServiceTest {
     @Test
     void addNew() throws Exception {
         // given
-        UserEntity user = userRepository.save(new UserEntity(new EmailJoinRequestDto(email, password, null), null));
+        UserEntity user = new EmailJoinRequestDto(email, password).toEntity();
         AddCategoryRequestDto dto = new AddCategoryRequestDto(name, color, is_private);
 
         // when
@@ -87,7 +87,7 @@ class TodoCategoryServiceTest {
     @Test
     void modify() throws Exception {
         // given
-        UserEntity user = userRepository.save(new UserEntity(new EmailJoinRequestDto(email, password, null), null));
+        UserEntity user = userRepository.save(new EmailJoinRequestDto(email, password).toEntity());
         CategoryEntity category = new CategoryEntity(user, name, color, is_private);
         Long id = categoryRepository.save(category).getId();
 
@@ -111,7 +111,7 @@ class TodoCategoryServiceTest {
     @Test
     void remove() {
         // given
-        UserEntity user = userRepository.save(new UserEntity(new EmailJoinRequestDto(email, password, null), null));
+        UserEntity user = userRepository.save(new EmailJoinRequestDto(email, password).toEntity());
         CategoryEntity category = new CategoryEntity(user, name, color, is_private);
         Long id = categoryRepository.save(category).getId();
 

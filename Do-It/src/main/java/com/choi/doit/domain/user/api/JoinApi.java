@@ -12,7 +12,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -77,16 +76,16 @@ public class JoinApi {
     }
 
     // 이메일 가입
-    @PostMapping(path = "/sign-up/email", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<ResponseDto> join(@Valid @ModelAttribute EmailJoinRequestDto emailJoinRequestDto) throws IOException {
+    @PostMapping("/sign-up/email")
+    public ResponseEntity<ResponseDto> join(@RequestBody @Valid EmailJoinRequestDto emailJoinRequestDto) throws IOException {
         EmailJoinResponseDto emailJoinResponseDto = emailJoinService.join(null, emailJoinRequestDto);
 
         return ResponseEntity.status(201).body(DataResponseDto.of(emailJoinResponseDto, 201));
     }
 
     // 게스트 이메일 가입
-    @PostMapping(path = "/guest/email", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<ResponseDto> join(@RequestHeader @Value("Authorization") String authorization, @Valid @ModelAttribute EmailJoinRequestDto emailJoinRequestDto) throws IOException {
+    @PostMapping("/guest/email")
+    public ResponseEntity<ResponseDto> join(@RequestHeader @Value("Authorization") String authorization, @RequestBody @Valid EmailJoinRequestDto emailJoinRequestDto) throws IOException {
         EmailJoinResponseDto emailJoinResponseDto = emailJoinService.join(authorization, emailJoinRequestDto);
 
         return ResponseEntity.status(201).body(DataResponseDto.of(emailJoinResponseDto, 201));

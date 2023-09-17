@@ -53,7 +53,7 @@ class MyPageTodoServiceTest {
     @Test
     void hasUnfinishedTodo() {
         // given
-        UserEntity user = userRepository.save(new UserEntity(new EmailJoinRequestDto(email, password, null), null));
+        UserEntity user = userRepository.save(new EmailJoinRequestDto(email, password).toEntity());
         CategoryEntity category = new CategoryEntity(user, categoryStr, color);
         categoryRepository.save(category);
         TodoEntity todo = new TodoEntity(user, content, category, LocalDate.parse(dateStr), LocalTime.parse(timeStr));
@@ -72,7 +72,7 @@ class MyPageTodoServiceTest {
     @Test
     void readUnfinishedTodoList() {
         // given
-        UserEntity user = userRepository.save(new UserEntity(new EmailJoinRequestDto(email, password, null), null));
+        UserEntity user = userRepository.save(new EmailJoinRequestDto(email, password).toEntity());
         CategoryEntity category = new CategoryEntity(user, categoryStr, color);
         categoryRepository.save(category);
         TodoEntity todo = new TodoEntity(user, content, category, LocalDate.parse(dateStr), LocalTime.parse(timeStr));
@@ -96,7 +96,7 @@ class MyPageTodoServiceTest {
     @Test
     void countFinishedTodo() {
         // given
-        UserEntity user = userRepository.save(new UserEntity(new EmailJoinRequestDto(email, password, null), null));
+        UserEntity user = userRepository.save(new EmailJoinRequestDto(email, password).toEntity());
         CategoryEntity category = new CategoryEntity(user, categoryStr, color);
         categoryRepository.save(category);
 
@@ -125,7 +125,7 @@ class MyPageTodoServiceTest {
     @Test
     void readFinishedTodoListTop2() {
         // given
-        UserEntity user = userRepository.save(new UserEntity(new EmailJoinRequestDto(email, password, null), null));
+        UserEntity user = userRepository.save(new EmailJoinRequestDto(email, password).toEntity());
         CategoryEntity category = new CategoryEntity(user, categoryStr, color);
         categoryRepository.save(category);
 

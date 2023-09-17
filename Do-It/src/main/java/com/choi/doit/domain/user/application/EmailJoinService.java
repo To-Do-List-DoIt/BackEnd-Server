@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
@@ -51,7 +50,7 @@ public class EmailJoinService {
     private final TodoDefaultSettingService todoDefaultSettingService;
 
     @Transactional
-    public Long setGuestInfo(UserEntity user, EmailJoinRequestDto dto, String profile_path) {
+    public Long setGuestInfo(UserEntity user, EmailJoinRequestDto dto) {
         Long user_id = user.getId();
         String email = dto.getEmail();
         String password = dto.getPassword();
@@ -59,7 +58,6 @@ public class EmailJoinService {
         userRepository.updateRole(Role.MEMBER, user_id);
         userRepository.updateEmail(email, user_id);
         userRepository.updatePassword(password, user_id);
-        userRepository.updateProfileImagePath(profile_path, user_id);
 
         return user_id;
     }
@@ -165,8 +163,6 @@ public class EmailJoinService {
 
         String email = emailJoinRequestDto.getEmail();
         String password = emailJoinRequestDto.getPassword();
-        MultipartFile image = emailJoinRequestDto.getProfile();
-        String profile_path = null;
 
         // 인증 여부 조회
         if (!isAuthenticated(emailJoinRequestDto.getEmail()))
@@ -175,23 +171,19 @@ public class EmailJoinService {
         // 이메일 중복 검사
         duplicateCheckUtil.isDupEmail(email);
 
-        // 프로필 이미지 저장
-        if (image != null)
-            profile_path = imageHandler.saveProfileImage(email, image);
-
         // 비밀번호 암호화
         emailJoinRequestDto.setPassword(passwordEncoder.encode(password));
 
         // 유저 데이터 저장 + 기본 카테고리 저장
         if (user == null) {
-            UserEntity newUser = userRepository.save(emailJoinRequestDto.toEntity(profile_path));
+            UserEntity newUser = userRepository.save(emailJoinRequestDto.toEntity());
 
             // 기본 카테고리 저장
             todoDefaultSettingService.addDefaultCategory(newUser);
 
             return new EmailJoinResponseDto(newUser.getId());
         } else
-            return new EmailJoinResponseDto(setGuestInfo(user, emailJoinRequestDto, profile_path));
+            return new EmailJoinResponseDto(setGuestInfo(user, emailJoinRequestDto));
     }
 
     public void checkDuplicate(DuplicateCheckRequestDto dto) throws RestApiException {
