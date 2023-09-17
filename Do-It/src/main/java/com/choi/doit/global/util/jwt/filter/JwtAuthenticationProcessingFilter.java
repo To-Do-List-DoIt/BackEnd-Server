@@ -49,7 +49,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws RestApiException, SpringSecurityException, ServletException, IOException, ExpiredJwtException {
         // uri 검사하여 필터 통과 여부 결정
         String uri = request.getRequestURI();
-        if (uri.contains("/login") || uri.contains("/sign-up") || uri.equals("/user/guest")) {
+        if (uri.contains("/login") || uri.contains("/sign-up") || uri.contains("/user/guest")) {
             filterChain.doFilter(request, response);
             return;
         }

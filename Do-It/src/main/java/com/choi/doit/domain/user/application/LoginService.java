@@ -5,6 +5,7 @@ import com.choi.doit.domain.model.Role;
 import com.choi.doit.domain.todo.application.TodoDefaultSettingService;
 import com.choi.doit.domain.user.dao.UserRepository;
 import com.choi.doit.domain.user.domain.UserEntity;
+import com.choi.doit.domain.user.dto.response.GuestLoginResponseDto;
 import com.choi.doit.domain.user.dto.response.LoginResponseDto;
 import com.choi.doit.domain.user.exception.UserErrorCode;
 import com.choi.doit.domain.user.vo.OAuthUserInfoDto;
@@ -60,18 +61,39 @@ public class LoginService {
 
     // 게스트 로그인
     @Transactional
-    public LoginResponseDto guestLogin() {
-        // 랜덤 이메일 생성
-        String email = randomUtil.getRandomUsername();
-        String password = randomUtil.getRandomPassword(15, true);
+    public GuestLoginResponseDto guestLogin(Long userId, String code) throws RestApiException {
+        UserEntity user;
+        String email;
 
-        // 데이터 등록
-        UserEntity user = userRepository.save(new UserEntity(email, password));
+        if (code == null) {
+            // 랜덤 이메일 생성
+            email = randomUtil.getRandomUsername();
+            String password = randomUtil.getRandomPassword(15, true);
 
-        // 기본 카테고리 생성
-        todoDefaultSettingService.addDefaultCategory(user);
+            // 데이터 등록
+            user = userRepository.save(new UserEntity(email, password));
 
-        return jwtUtil.generateTokens(user);
+            // 기본 카테고리 생성
+            todoDefaultSettingService.addDefaultCategory(user);
+        } else {
+            email = code;
+
+            // user-id 유효성 검사
+            if (userId == null) {
+                throw new RestApiException(UserErrorCode.USER_ID_REQUIRED);
+            }
+            user = userRepository.findById(userId)
+                    .orElseThrow(() -> new RestApiException(UserErrorCode.USER_NOT_FOUND));
+
+            // 저장된 code 일치 여부 검사
+            if (!email.equals(user.getEmail()))
+                throw new RestApiException(UserErrorCode.INVALID_CODE);
+        }
+
+        // JWT token
+        LoginResponseDto loginResponseDto = jwtUtil.generateTokens(user);
+
+        return new GuestLoginResponseDto(loginResponseDto.getUser_id(), email, loginResponseDto.getAccess_token(), loginResponseDto.getRefresh_token());
     }
 
     // 구글 로그인
