@@ -1,5 +1,7 @@
 package com.choi.doit.global.util;
 
+import com.choi.doit.domain.user.exception.UserErrorCode;
+import com.choi.doit.global.error.exception.RestApiException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class MailUtil {
     private final JavaMailSender javaMailSender;
 
-    public void sendMail(String to, String subject, String template) {
+    public void sendMail(String to, String subject, String template) throws RestApiException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
         try {
@@ -28,7 +30,7 @@ public class MailUtil {
             log.info("[Mail] Email sent successfully. -- " + to);
         } catch (MessagingException e) {
             log.error("[Mail] Email sending failed. -- " + to);
-            throw new RuntimeException(e);
+            throw new RestApiException(UserErrorCode.EMAIL_SENDING_FAILED);
         }
     }
 }

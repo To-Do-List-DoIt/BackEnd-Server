@@ -18,7 +18,8 @@ public enum UserErrorCode implements ErrorCode {
     INVALID_LINK(HttpStatus.UNAUTHORIZED, "Invalid link."),
     EMAIL_ALREADY_AUTHENTICATED(HttpStatus.FORBIDDEN, "Email already authenticated."),
     DUPLICATED_NICKNAME(HttpStatus.BAD_REQUEST, "Nickname already exists."),
-    DUPLICATED_EMAIL(HttpStatus.BAD_REQUEST, "Email already exists.");
+    DUPLICATED_EMAIL(HttpStatus.BAD_REQUEST, "Email already exists."),
+    EMAIL_SENDING_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "Email Sending failed.");
 
     private final HttpStatus httpStatus;
     private final String message;
