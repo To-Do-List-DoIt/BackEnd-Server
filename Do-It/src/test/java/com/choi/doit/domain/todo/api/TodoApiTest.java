@@ -61,7 +61,7 @@ class TodoApiTest {
         UserEntity user = new EmailJoinRequestDto(email, password, nickname).toEntity();
         userRepository.save(user);
 
-        String token = jwtUtil.generateTokens(user).getAccess_token();
+        String token = jwtUtil.generateTokens(user).getAccessToken();
         accessToken += token;
 
         CategoryEntity category = new CategoryEntity(user, categoryStr, "FF0000");

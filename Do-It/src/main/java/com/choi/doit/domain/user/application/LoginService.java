@@ -92,7 +92,7 @@ public class LoginService {
         // JWT token
         LoginResponseDto loginResponseDto = jwtUtil.generateTokens(user);
 
-        return new GuestLoginResponseDto(loginResponseDto.getUser_id(), email, loginResponseDto.getAccess_token(), loginResponseDto.getRefresh_token());
+        return new GuestLoginResponseDto(loginResponseDto.getUserId(), email, loginResponseDto.getAccessToken(), loginResponseDto.getRefreshToken());
     }
 
     // 구글 로그인

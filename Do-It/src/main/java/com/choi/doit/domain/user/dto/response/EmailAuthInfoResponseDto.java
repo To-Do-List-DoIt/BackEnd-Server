@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @Getter
 public class EmailAuthInfoResponseDto {
     private String email;
-    private boolean is_authorized;
+    private boolean isAuthorized;
 }

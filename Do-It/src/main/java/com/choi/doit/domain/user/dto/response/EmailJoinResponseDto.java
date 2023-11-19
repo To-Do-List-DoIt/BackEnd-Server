@@ -6,5 +6,5 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class EmailJoinResponseDto {
-    private Long user_id;
+    private Long userId;
 }

@@ -6,8 +6,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class GuestLoginResponseDto {
-    private Long user_id;
-    private String user_code;
-    private String access_token;
-    private String refresh_token;
+    private Long userId;
+    private String userCode;
+    private String accessToken;
+    private String refreshToken;
 }
