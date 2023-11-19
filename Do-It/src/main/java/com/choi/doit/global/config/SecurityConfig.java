@@ -54,7 +54,8 @@ public class SecurityConfig {
                 .sessionManagement((sessionManagement) ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorizeRequests) ->
-                        authorizeRequests.requestMatchers("/user/sign-up/**", "/user/login/**", "/user/guest").permitAll()
+                        authorizeRequests
+                                .requestMatchers("/user/sign-up/**", "/user/login/**", "/user/guest/**").permitAll()
                                 .anyRequest().authenticated());
 
         http.addFilterAfter(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class);

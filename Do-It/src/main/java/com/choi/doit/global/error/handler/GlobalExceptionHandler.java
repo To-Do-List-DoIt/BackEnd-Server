@@ -72,7 +72,11 @@ public class GlobalExceptionHandler {
 
         if (org_message.contains("email"))
             message = GlobalErrorCode.INVALID_EMAIL_FORMAT.getMessage();
-
+        else if (org_message.contains("nickname"))
+            message = GlobalErrorCode.INVALID_NICKNAME_FORMAT.getMessage();
+        else if (org_message.contains("password"))
+            message = GlobalErrorCode.INVALID_PASSWORD_FORMAT.getMessage();
+        
         if (org_message.contains("null"))
             message = GlobalErrorCode.VALUE_REQUIRED.getMessage();
 

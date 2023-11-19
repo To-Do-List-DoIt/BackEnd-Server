@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @Getter
 public class NicknameVo {
     @NotNull
-    @Size(min = 3, max = 8)
+    @Size(min = 2, max = 10)
     private String nickname;
 }

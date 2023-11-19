@@ -58,7 +58,7 @@ class TodoApiTest {
 
     @BeforeEach
     void addTodoData() {
-        UserEntity user = new UserEntity(new EmailJoinRequestDto(email, password, null), null);
+        UserEntity user = new EmailJoinRequestDto(email, password, nickname).toEntity();
         userRepository.save(user);
 
         String token = jwtUtil.generateTokens(user).getAccess_token();
