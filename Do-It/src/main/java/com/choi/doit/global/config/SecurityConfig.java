@@ -2,14 +2,14 @@ package com.choi.doit.global.config;
 
 import com.choi.doit.domain.user.application.LoginDetailsService;
 import com.choi.doit.domain.user.application.LoginService;
-import com.choi.doit.domain.user.application.filter.JsonEmailPasswordAuthenticationFilter;
-import com.choi.doit.domain.user.application.handler.LoginFailureHandler;
-import com.choi.doit.domain.user.application.handler.LoginSuccessHandler;
 import com.choi.doit.domain.user.dao.UserRepository;
 import com.choi.doit.global.error.handler.ExceptionHandlerFilter;
 import com.choi.doit.global.util.ResponseUtil;
 import com.choi.doit.global.util.jwt.JwtUtil;
 import com.choi.doit.global.util.jwt.filter.JwtAuthenticationProcessingFilter;
+import com.choi.doit.global.util.security.filter.JsonEmailPasswordAuthenticationFilter;
+import com.choi.doit.global.util.security.handler.LoginFailureHandler;
+import com.choi.doit.global.util.security.handler.LoginSuccessHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -48,7 +48,7 @@ public class SecurityConfig {
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests
-                                .requestMatchers("/user/sign-up/**", "/user/login/**", "/user/guest/**").permitAll()
+                                .requestMatchers("/api/v1/user/sign-up/**", "/api/v1/user/login/**", "/api/v1/user/guest/**").permitAll()
                                 .anyRequest().authenticated());
 
         http.addFilterAfter(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class);

@@ -23,7 +23,7 @@ import java.security.GeneralSecurityException;
 
 @Slf4j
 public class JsonEmailPasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
-    private static final String DEFAULT_LOGIN_REQUEST_URL = "/user/login/**"; // "/user/login/email"으로 오는 요청을 처리
+    private static final String DEFAULT_LOGIN_REQUEST_URL = "/api/v1/user/login/**"; // "/api/v1/user/login/email"으로 오는 요청을 처리
     private static final String HTTP_METHOD = "POST"; // 로그인 HTTP 메소드는 POST
     private static final AntPathRequestMatcher DEFAULT_LOGIN_PATH_REQUEST_MATCHER =
             new AntPathRequestMatcher(DEFAULT_LOGIN_REQUEST_URL, HTTP_METHOD); // "/login" + POST로 온 요청에 매칭된다.
@@ -31,7 +31,7 @@ public class JsonEmailPasswordAuthenticationFilter extends AbstractAuthenticatio
     private final LoginService loginService;
 
     public JsonEmailPasswordAuthenticationFilter(ObjectMapper objectMapper, LoginService loginService) {
-        super("/user/login/**");
+        super(DEFAULT_LOGIN_REQUEST_URL);
         this.objectMapper = objectMapper;
         this.loginService = loginService;
     }
