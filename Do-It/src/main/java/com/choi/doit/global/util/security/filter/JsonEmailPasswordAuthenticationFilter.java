@@ -1,4 +1,4 @@
-package com.choi.doit.domain.user.application.filter;
+package com.choi.doit.global.util.security.filter;
 
 import com.choi.doit.domain.user.application.LoginService;
 import com.choi.doit.domain.user.domain.UserEntity;

@@ -1,4 +1,4 @@
-package com.choi.doit.domain.user.application.handler;
+package com.choi.doit.global.util.security.handler;
 
 import com.choi.doit.global.error.GlobalErrorCode;
 import com.choi.doit.global.error.exception.SpringSecurityException;
