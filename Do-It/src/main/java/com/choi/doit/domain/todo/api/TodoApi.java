@@ -25,7 +25,7 @@ import java.util.ArrayList;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/todo")
+@RequestMapping("/api/v1/todo")
 public class TodoApi {
     private final TodoCUDService todoCUDService;
     private final TodoRService todoRService;

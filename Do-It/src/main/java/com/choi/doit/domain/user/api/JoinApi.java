@@ -20,7 +20,7 @@ import java.io.IOException;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/v1/user")
 public class JoinApi {
     private final EmailJoinService emailJoinService;
 

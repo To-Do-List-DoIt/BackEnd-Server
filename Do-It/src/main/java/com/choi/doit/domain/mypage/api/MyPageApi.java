@@ -18,7 +18,7 @@ import java.net.URI;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/my-page")
+@RequestMapping("/api/v1/my-page")
 public class MyPageApi {
     private final MyPageService myPageService;
 
