@@ -19,6 +19,7 @@ import com.choi.doit.global.util.RandomUtil;
 import com.choi.doit.global.util.RedisUtil;
 import com.choi.doit.global.util.jwt.JwtUtil;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -103,6 +104,7 @@ public class EmailJoinService {
         redisUtil.opsForHashPut(email, value, 2);
     }
 
+    // 이메일 링크 전송
     public EmailAuthResponseDto sendLink(EmailRequestDto emailRequestDto) {
         String email = emailRequestDto.getEmail();
 
@@ -191,7 +193,7 @@ public class EmailJoinService {
             return new EmailJoinResponseDto(setGuestInfo(user, emailJoinRequestDto));
     }
 
-    public void checkDuplicate(DuplicateCheckRequestDto dto) throws RestApiException {
+    public void checkDuplicate(@Valid DuplicateCheckRequestDto dto) throws RestApiException {
         String type = dto.getType();
         String value = dto.getValue();
 
