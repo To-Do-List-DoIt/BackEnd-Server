@@ -70,7 +70,7 @@ public class EmailJoinService {
 
         if (is_authenticated == null)
             // 해당 이메일이 존재하지 않음
-            throw new RestApiException(UserErrorCode.EMAIL_NOT_FOUND);
+            throw new RestApiException(UserErrorCode.EMAIL_NOT_EXIST);
 
         return is_authenticated;
     }
@@ -82,8 +82,8 @@ public class EmailJoinService {
         Boolean is_authorized = (Boolean) redisTemplate.opsForHash().get(email, EmailAuthKeyEnum.IS_AUTHENTICATED.getKey());
 
         if (!code.equals(code_data))
-            // 올바르지 않은 링크
-            throw new RestApiException(UserErrorCode.INVALID_LINK);
+            // 올바르지 않은 코드
+            throw new RestApiException(UserErrorCode.INVALID_CODE);
         else if (allowDuplicateRequest && Boolean.TRUE.equals(is_authorized))
             // 링크 중복 클릭
             throw new RestApiException(UserErrorCode.EMAIL_ALREADY_AUTHENTICATED);
