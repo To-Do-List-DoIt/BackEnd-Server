@@ -74,7 +74,7 @@ public class TodoApi {
     }
 
     @GetMapping("/month")
-    public ResponseEntity<ResponseDto> getMonthCount(@RequestParam @NotNull String date) {
+    public ResponseEntity<ResponseDto> getMonthCount(@RequestParam(value = "year-month") @NotNull String date) {
         MonthCountDto monthCountDto = todoRService.readMonthCount(date);
 
         return ResponseEntity.ok(DataResponseDto.of(monthCountDto, 200));
@@ -91,7 +91,7 @@ public class TodoApi {
     public ResponseEntity<ResponseDto> addNewCategory(AddCategoryRequestDto addCategoryRequestDto) {
         AddCategoryResponseDto addCategoryResponseDto = todoCategoryService.addNew(addCategoryRequestDto);
 
-        return ResponseEntity.created(URI.create("/category/" + addCategoryResponseDto.getCategory_id())).body(DataResponseDto.of(addCategoryResponseDto.getDetail(), 201));
+        return ResponseEntity.created(URI.create("/category/" + addCategoryResponseDto.getCategoryId())).body(DataResponseDto.of(addCategoryResponseDto.getDetail(), 201));
     }
 
     @PatchMapping("/category/{category-id}")

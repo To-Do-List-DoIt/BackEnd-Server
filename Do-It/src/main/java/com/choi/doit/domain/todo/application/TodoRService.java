@@ -44,9 +44,9 @@ public class TodoRService {
     }
 
     // 월별 전체 개수
-    public MonthCountDto readMonthCount(String date_str) throws RestApiException {
+    public MonthCountDto readMonthCount(String yearMonth) throws RestApiException {
         UserEntity user = securityContextUtil.getUserEntity();
-        LocalDate date = datetimeUtil.parseYearMonth(date_str);
+        LocalDate date = datetimeUtil.parseYearMonth(yearMonth);
 
         return todoReadDataWithUserService.readMonthCount(user, date);
     }

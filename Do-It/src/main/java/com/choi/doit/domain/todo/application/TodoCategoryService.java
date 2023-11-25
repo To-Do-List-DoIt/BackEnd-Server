@@ -35,7 +35,7 @@ public class TodoCategoryService {
 
         String name = addCategoryRequestDto.getName();
         String color = addCategoryRequestDto.getColor();
-        Boolean isPrivate = addCategoryRequestDto.getIs_private();
+        Boolean isPrivate = addCategoryRequestDto.getIsPrivate();
 
         CategoryEntity categoryEntity = new CategoryEntity(user, name, color, isPrivate);
         CategoryEntity category = categoryRepository.save(categoryEntity);
@@ -48,7 +48,7 @@ public class TodoCategoryService {
 
         String name = editCategoryRequestDto.getName();
         String color = editCategoryRequestDto.getColor();
-        Boolean isPrivate = editCategoryRequestDto.getIs_private();
+        Boolean isPrivate = editCategoryRequestDto.getIsPrivate();
 
         CategoryEntity category = categoryRepository.findById(category_id)
                 .orElseThrow(() -> new RestApiException(TodoErrorCode.CATEGORY_NOT_FOUND));
