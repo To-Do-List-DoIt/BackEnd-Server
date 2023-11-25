@@ -1,4 +1,4 @@
-package com.choi.doit.domain.user.vo;
+package com.choi.doit.domain.user.dto;
 
 import com.choi.doit.domain.model.Provider;
 import lombok.*;
