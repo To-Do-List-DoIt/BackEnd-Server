@@ -30,7 +30,6 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -159,7 +158,7 @@ public class EmailJoinService {
     }
 
     // 이메일 가입
-    public EmailJoinResponseDto join(String authorization, EmailJoinRequestDto emailJoinRequestDto) throws IOException {
+    public EmailJoinResponseDto join(String authorization, EmailJoinRequestDto emailJoinRequestDto) {
         UserEntity user = null;
         if (authorization != null)
             user = jwtUtil.validateAccessToken(jwtUtil.decodeBearer(authorization));

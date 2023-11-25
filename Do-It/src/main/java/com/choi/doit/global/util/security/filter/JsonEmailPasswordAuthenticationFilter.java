@@ -57,8 +57,6 @@ public class JsonEmailPasswordAuthenticationFilter extends AbstractAuthenticatio
             } catch (GeneralSecurityException e) {
                 throw new AuthenticationServiceException(GlobalErrorCode.AUTHENTICATION_FAILED.getMessage());
             }
-            //} else if (request.getRequestURI().contains("apple")) {
-            // apple oauth
         } else {
             // 이메일 가입자
             String messageBody = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);

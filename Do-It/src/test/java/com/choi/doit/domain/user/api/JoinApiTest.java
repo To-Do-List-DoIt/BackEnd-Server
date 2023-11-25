@@ -49,8 +49,8 @@ class JoinApiTest {
         return code;
     }
 
-    @DisplayName("이메일 인증 링크 요청")
     @Test
+    @DisplayName("이메일 인증 링크 요청")
     void postEmailForLink() throws Exception {
         // given
         String url = BASE_URL + "/email/link";
@@ -65,8 +65,8 @@ class JoinApiTest {
                 .andDo(print());
     }
 
-    @DisplayName("이메일 인증 링크 변경 요청")
     @Test
+    @DisplayName("이메일 인증 링크 변경 요청")
     void patchEmailForLink() throws Exception {
         // given
         String code = addMockEmailRequest(false);
@@ -85,8 +85,8 @@ class JoinApiTest {
                 .andDo(print());
     }
 
-    @DisplayName("이메일 인증 요청 - 유저가 이메일 링크 클릭한 경우")
     @Test
+    @DisplayName("이메일 인증 요청 - 유저가 이메일 링크 클릭한 경우")
     void emailConfirm() throws Exception {
         // given
         String code = addMockEmailRequest(false);
@@ -103,8 +103,8 @@ class JoinApiTest {
                 .andDo(print());
     }
 
-    @DisplayName("이메일 인증 여부 확인")
     @Test
+    @DisplayName("이메일 인증 여부 확인")
     void checkAuthInfo() throws Exception {
         // given
         addMockEmailRequest(false);
@@ -122,8 +122,8 @@ class JoinApiTest {
                 .andDo(print());
     }
 
-    @DisplayName("이메일 중복확인")
     @Test
+    @DisplayName("이메일 중복확인")
     void checkDuplicate_email() throws Exception {
         // given
         String testEmail = "abc56@abc.com";
@@ -141,8 +141,9 @@ class JoinApiTest {
                 .andDo(print());
     }
 
-    @DisplayName("닉네임 중복확인")
+
     @Test
+    @DisplayName("닉네임 중복확인")
     void checkDuplicate_nickname() throws Exception {
         // given
         String testNickname = "test_닉네임";
@@ -160,8 +161,8 @@ class JoinApiTest {
                 .andDo(print());
     }
 
-    @DisplayName("이메일 가입")
     @Test
+    @DisplayName("이메일 가입")
     void join() throws Exception {
         // given
         addMockEmailRequest(true);
@@ -178,13 +179,5 @@ class JoinApiTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.data.userId").exists())
                 .andDo(print());
-    }
-
-    @DisplayName("게스트 이메일 가입")
-    @Test
-    void guestJoin() {
-        // given
-        // when
-        // then
     }
 }
