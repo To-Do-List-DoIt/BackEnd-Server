@@ -37,7 +37,6 @@ out/
 .vscode/
 
 ### properties ###
-application.yml
 application.properties
 
 ### sample files (for test) ###
