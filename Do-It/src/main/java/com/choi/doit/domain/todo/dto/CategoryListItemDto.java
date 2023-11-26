@@ -10,9 +10,11 @@ import lombok.Setter;
 public class CategoryListItemDto {
     private String name;
     private String color;
+    private Boolean isPrivate;
 
-    public CategoryListItemDto(String name, String color) {
+    public CategoryListItemDto(String name, String color, Boolean isPrivate) {
         this.name = name;
         this.color = color;
+        this.isPrivate = isPrivate;
     }
 }

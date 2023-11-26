@@ -15,10 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -29,14 +26,7 @@ public class TodoReadDataWithUserService {
 
     // 날짜(하루) 기준 일정 조회
     public DayTodoDto readDay(UserEntity user, LocalDate date) {
-        ArrayList<CategoryEntity> categoryList = categoryRepository.findAllByUser(user);
-        Map<String, LinkedList<TodoItemDto>> result = new HashMap<>();
-
-        for (CategoryEntity category : categoryList) {
-            LinkedList<TodoItemDto> list = todoRepository.findAllByUserAndDateAndCategoryOrderByTimeAscWithJpql(user, date, category);
-
-            result.put(category.getName(), list);
-        }
+        LinkedList<TodoItemDto> result = todoRepository.findAllByUserAndDateOrderByTimeAscWithJpql(user, date);
 
         return new DayTodoDto(result);
     }
