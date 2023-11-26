@@ -33,14 +33,14 @@ public class FriendTodoApi {
     // 카테고리 & 날짜(하루) 기준 일정 조회
     @GetMapping("/day")
     public ResponseEntity<ResponseDto> getDayCategory(@RequestParam @NotNull String email, @RequestParam @NotNull String date, @RequestParam @NotNull String category) {
-        CategoryDayTodoDto categoryDayTodoDto = friendTodoService.readCategoryDay(email, category, date);
+        CategoryDayTodoDto categoryDayTodoDto = friendTodoService.readCategoryDay(email, date, category);
 
         return ResponseEntity.ok(DataResponseDto.of(categoryDayTodoDto, 200));
     }
 
     // 월별 전체 일정 개수 조회
     @GetMapping("/month")
-    public ResponseEntity<ResponseDto> getMonthCount(@RequestParam @NotNull String email, @RequestParam @NotNull String date) {
+    public ResponseEntity<ResponseDto> getMonthCount(@RequestParam @NotNull String email, @RequestParam("year-month") @NotNull String date) {
         MonthCountDto monthCountDto = friendTodoService.readMonthCount(email, date);
 
         return ResponseEntity.ok(DataResponseDto.of(monthCountDto, 200));
