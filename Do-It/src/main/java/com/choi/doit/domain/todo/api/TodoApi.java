@@ -1,12 +1,7 @@
 package com.choi.doit.domain.todo.api;
 
 import com.choi.doit.domain.todo.application.TodoCUDService;
-import com.choi.doit.domain.todo.application.TodoCategoryService;
 import com.choi.doit.domain.todo.application.TodoRService;
-import com.choi.doit.domain.todo.dto.CategoryDetailDto;
-import com.choi.doit.domain.todo.dto.CategoryListItemDto;
-import com.choi.doit.domain.todo.dto.request.AddCategoryRequestDto;
-import com.choi.doit.domain.todo.dto.request.EditCategoryRequestDto;
 import com.choi.doit.domain.todo.dto.request.EditTodoRequestDto;
 import com.choi.doit.domain.todo.dto.request.NewTodoRequestDto;
 import com.choi.doit.domain.todo.dto.response.*;
@@ -19,9 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
-import java.util.ArrayList;
-
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -29,7 +21,6 @@ import java.util.ArrayList;
 public class TodoApi {
     private final TodoCUDService todoCUDService;
     private final TodoRService todoRService;
-    private final TodoCategoryService todoCategoryService;
 
     @PostMapping
     public ResponseEntity<ResponseDto> addNew(@RequestBody @Valid NewTodoRequestDto newTodoRequestDto) {
@@ -78,33 +69,5 @@ public class TodoApi {
         MonthCountDto monthCountDto = todoRService.readMonthCount(date);
 
         return ResponseEntity.ok(DataResponseDto.of(monthCountDto, 200));
-    }
-
-    @GetMapping("/category")
-    public ResponseEntity<ResponseDto> getAllCategory() {
-        ArrayList<CategoryListItemDto> data = todoCategoryService.readAll();
-
-        return ResponseEntity.ok(DataResponseDto.of(data, 200));
-    }
-
-    @PostMapping("/category")
-    public ResponseEntity<ResponseDto> addNewCategory(AddCategoryRequestDto addCategoryRequestDto) {
-        AddCategoryResponseDto addCategoryResponseDto = todoCategoryService.addNew(addCategoryRequestDto);
-
-        return ResponseEntity.created(URI.create("/category/" + addCategoryResponseDto.getCategoryId())).body(DataResponseDto.of(addCategoryResponseDto.getDetail(), 201));
-    }
-
-    @PatchMapping("/category/{category-id}")
-    public ResponseEntity<ResponseDto> editCategory(@PathVariable("category-id") Long category_id, EditCategoryRequestDto editCategoryRequestDto) {
-        CategoryDetailDto categoryDetailDto = todoCategoryService.modify(category_id, editCategoryRequestDto);
-
-        return ResponseEntity.status(201).body(DataResponseDto.of(categoryDetailDto, 201));
-    }
-
-    @DeleteMapping("/category/{category-id}")
-    public ResponseEntity<ResponseDto> removeCategory(@PathVariable("category-id") Long category_id) {
-        todoCategoryService.remove(category_id);
-
-        return ResponseEntity.ok(ResponseDto.of(200));
     }
 }
