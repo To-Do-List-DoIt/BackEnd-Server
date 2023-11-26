@@ -64,4 +64,6 @@ public interface TodoRepository extends JpaRepository<TodoEntity, Long> {
     void updateAllByUserAndCategory(UserEntity user, CategoryEntity category);
 
     List<TodoEntity> findAllByUser(UserEntity user);
+
+    void deleteAllByUser(UserEntity user);
 }

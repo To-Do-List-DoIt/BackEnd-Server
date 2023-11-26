@@ -19,4 +19,6 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, Long> 
             "from CategoryEntity c " +
             "where c.user = :user")
     ArrayList<CategoryListItemDto> findAllByUserWithJpql(@Param(value = "user") UserEntity user);
+
+    void deleteAllByUser(UserEntity user);
 }

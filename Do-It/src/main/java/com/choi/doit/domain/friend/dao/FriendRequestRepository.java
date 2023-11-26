@@ -23,4 +23,8 @@ public interface FriendRequestRepository extends JpaRepository<FriendRequestEnti
             "from FriendRequest f " +
             "where f.targetUser = :targetUser")
     ArrayList<FriendItemDto> findAllByTargetUser(UserEntity targetUser);
+
+    void deleteAllByUser(UserEntity user);
+
+    void deleteAllByTargetUser(UserEntity target);
 }

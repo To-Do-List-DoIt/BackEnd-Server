@@ -18,4 +18,6 @@ public interface FriendRepository extends JpaRepository<FriendEntity, Long> {
     ArrayList<FriendItemDto> findAllByUser(UserEntity user);
 
     Boolean existsByUserAndFriendUser(UserEntity user, UserEntity friendUser);
+
+    void deleteAllByUser(UserEntity user);
 }
