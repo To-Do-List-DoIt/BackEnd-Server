@@ -7,6 +7,7 @@ import com.choi.doit.domain.todo.dto.TodoCountDto;
 import com.choi.doit.domain.todo.dto.response.TodoItemDto;
 import com.choi.doit.domain.user.domain.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -14,9 +15,17 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 @Repository
 public interface TodoRepository extends JpaRepository<TodoEntity, Long> {
+    @Query(value = "select new com.choi.doit.domain.todo.dto.response.TodoItemDto(t) " +
+            "from Todo t " +
+            "where t.user = :user " +
+            "and t.date = :date " +
+            "order by t.category.id asc, t.time asc")
+    LinkedList<TodoItemDto> findAllByUserAndDateOrderByTimeAscWithJpql(@Param(value = "user") UserEntity user, @Param(value = "date") LocalDate date);
+
     @Query(value = "select new com.choi.doit.domain.todo.dto.response.TodoItemDto(t) " +
             "from Todo t " +
             "where t.user = :user " +
@@ -47,4 +56,12 @@ public interface TodoRepository extends JpaRepository<TodoEntity, Long> {
     Long countAllByUserAndCheckStatusIsTrue(UserEntity user);
 
     LinkedList<TodoEntity> findTop2ByUserAndCheckStatusIsTrueOrderByDateDesc(UserEntity user);
+
+    @Modifying(clearAutomatically = true)
+    @Query(value = "update Todo t " +
+            "set t.category = null " +
+            "where t.user = :user and t.category = :category")
+    void updateAllByUserAndCategory(UserEntity user, CategoryEntity category);
+
+    List<TodoEntity> findAllByUser(UserEntity user);
 }

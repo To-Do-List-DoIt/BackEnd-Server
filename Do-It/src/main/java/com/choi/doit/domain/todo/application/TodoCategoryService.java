@@ -1,6 +1,7 @@
 package com.choi.doit.domain.todo.application;
 
 import com.choi.doit.domain.todo.dao.CategoryRepository;
+import com.choi.doit.domain.todo.dao.TodoRepository;
 import com.choi.doit.domain.todo.domain.CategoryEntity;
 import com.choi.doit.domain.todo.dto.CategoryDetailDto;
 import com.choi.doit.domain.todo.dto.CategoryListItemDto;
@@ -14,6 +15,7 @@ import com.choi.doit.global.util.SecurityContextUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 @Service
 public class TodoCategoryService {
     private final CategoryRepository categoryRepository;
+    private final TodoRepository todoRepository;
     private final SecurityContextUtil securityContextUtil;
 
     public ArrayList<CategoryListItemDto> readAll() {
@@ -63,6 +66,7 @@ public class TodoCategoryService {
         return new CategoryDetailDto(category);
     }
 
+    @Transactional
     public void remove(Long category_id) throws RestApiException {
         UserEntity user = securityContextUtil.getUserEntity();
 
@@ -74,6 +78,9 @@ public class TodoCategoryService {
         if (!category.getUser().equals(user))
             throw new RestApiException(TodoErrorCode.ACCESS_DENIED);
 
+        // 카테고리에 해당되는 투두 데이터 업데이트
+        todoRepository.updateAllByUserAndCategory(user, category);
+        
         // 데이터 삭제
         categoryRepository.delete(category);
     }

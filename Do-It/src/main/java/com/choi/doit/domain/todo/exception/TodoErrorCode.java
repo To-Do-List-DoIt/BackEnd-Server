@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum TodoErrorCode implements ErrorCode {
-    CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "Category not found."),
+    CATEGORY_NOT_FOUND(HttpStatus.BAD_REQUEST, "Category not found."),
     TODO_NOT_FOUND(HttpStatus.NOT_FOUND, "Todo not found."),
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "Access denied.");
 
