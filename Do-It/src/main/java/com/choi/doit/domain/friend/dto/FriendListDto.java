@@ -8,5 +8,5 @@ import java.util.ArrayList;
 @AllArgsConstructor
 @Getter
 public class FriendListDto {
-    private ArrayList<FriendItemDto> data;
+    private ArrayList<FriendItemDto> list;
 }

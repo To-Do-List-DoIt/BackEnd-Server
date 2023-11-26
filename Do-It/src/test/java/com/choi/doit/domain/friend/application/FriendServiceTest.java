@@ -98,7 +98,7 @@ class FriendServiceTest {
 
         // when
         FriendListDto friendListDto = friendService.getSentRequestList();
-        ArrayList<FriendItemDto> list = friendListDto.getData();
+        ArrayList<FriendItemDto> list = friendListDto.getList();
 
         // then
         assertThat(list.size()).isEqualTo(1);
@@ -114,7 +114,7 @@ class FriendServiceTest {
 
         // when
         FriendListDto friendListDto = friendService.getReceivedRequestList();
-        ArrayList<FriendItemDto> list = friendListDto.getData();
+        ArrayList<FriendItemDto> list = friendListDto.getList();
 
         // then
         assertThat(list.size()).isEqualTo(1);
@@ -131,7 +131,7 @@ class FriendServiceTest {
 
         // when
         FriendListDto friendListDto = friendService.getList();
-        ArrayList<FriendItemDto> list = friendListDto.getData();
+        ArrayList<FriendItemDto> list = friendListDto.getList();
 
         // then
         assertThat(list.size()).isEqualTo(1);
