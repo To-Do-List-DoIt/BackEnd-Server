@@ -1,4 +1,4 @@
-package com.choi.doit.domain.user.vo;
+package com.choi.doit.domain.user.dto;
 
 import com.choi.doit.domain.model.Provider;
 import lombok.*;
@@ -12,5 +12,6 @@ public class OAuthUserInfoDto {
     private Provider provider;
     private String email;
     private String password;
+    private String nickname;
     private String profile_image_path;
 }

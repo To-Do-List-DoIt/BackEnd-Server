@@ -83,6 +83,7 @@ public class FriendService {
     }
 
     // 친구 신청 송신 내역 조회
+    @Transactional(readOnly = true)
     public FriendListDto getSentRequestList() throws RestApiException {
         UserEntity user = securityContextUtil.getUserEntity();
 
@@ -97,6 +98,7 @@ public class FriendService {
     }
 
     // 친구 신청 수신 내역 조회
+    @Transactional(readOnly = true)
     public FriendListDto getReceivedRequestList() throws RestApiException {
         UserEntity user = securityContextUtil.getUserEntity();
 
@@ -111,6 +113,7 @@ public class FriendService {
     }
 
     // 친구 내역 조회
+    @Transactional(readOnly = true)
     public FriendListDto getList() throws RestApiException {
         UserEntity user = securityContextUtil.getUserEntity();
 

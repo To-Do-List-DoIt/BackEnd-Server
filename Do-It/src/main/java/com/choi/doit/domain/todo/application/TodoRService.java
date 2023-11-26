@@ -13,6 +13,7 @@ import com.choi.doit.global.util.SecurityContextUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
@@ -26,6 +27,7 @@ public class TodoRService {
     private final TodoReadDataWithUserService todoReadDataWithUserService;
 
     // 하루
+    @Transactional(readOnly = true)
     public DayTodoDto readDay(String date_str) throws RestApiException {
         UserEntity user = securityContextUtil.getUserEntity();
         LocalDate date = datetimeUtil.parseDate(date_str);
@@ -34,6 +36,7 @@ public class TodoRService {
     }
 
     // 하루 + 카테고리
+    @Transactional(readOnly = true)
     public CategoryDayTodoDto readCategoryDay(String category, String date_str) throws RestApiException {
         UserEntity user = securityContextUtil.getUserEntity();
         LocalDate date = datetimeUtil.parseDate(date_str);
@@ -44,9 +47,10 @@ public class TodoRService {
     }
 
     // 월별 전체 개수
-    public MonthCountDto readMonthCount(String date_str) throws RestApiException {
+    @Transactional(readOnly = true)
+    public MonthCountDto readMonthCount(String yearMonth) throws RestApiException {
         UserEntity user = securityContextUtil.getUserEntity();
-        LocalDate date = datetimeUtil.parseYearMonth(date_str);
+        LocalDate date = datetimeUtil.parseYearMonth(yearMonth);
 
         return todoReadDataWithUserService.readMonthCount(user, date);
     }

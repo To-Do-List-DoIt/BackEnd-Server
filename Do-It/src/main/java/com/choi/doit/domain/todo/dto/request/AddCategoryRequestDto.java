@@ -14,5 +14,5 @@ public class AddCategoryRequestDto {
     private String name;
     @NotNull
     private String color;
-    private Boolean is_private;
+    private Boolean isPrivate;
 }

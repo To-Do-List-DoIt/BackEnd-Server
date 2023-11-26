@@ -9,6 +9,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AddCategoryResponseDto {
-    private Long category_id;
+    private Long categoryId;
     private CategoryDetailDto detail;
 }

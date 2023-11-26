@@ -12,19 +12,19 @@ import java.time.LocalTime;
 @Getter
 @Setter
 public class TodoItemDto {
-    private Long todo_id;
+    private Long todoId;
     private String category;
     private String content;
     private LocalDate date;
     private LocalTime time;
-    private Boolean checked;
+    private Boolean isChecked;
 
     public TodoItemDto(TodoEntity todo) {
-        this.todo_id = todo.getId();
+        this.todoId = todo.getId();
         this.category = todo.getCategory().getName();
         this.content = todo.getContent();
         this.date = todo.getDate();
         this.time = todo.getTime();
-        this.checked = todo.getCheckStatus();
+        this.isChecked = todo.getCheckStatus();
     }
 }

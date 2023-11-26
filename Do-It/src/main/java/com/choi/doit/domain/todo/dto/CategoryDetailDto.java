@@ -11,11 +11,11 @@ import lombok.Setter;
 public class CategoryDetailDto {
     private String name;
     private String color;
-    private boolean is_private;
+    private Boolean isPrivate;
 
     public CategoryDetailDto(CategoryEntity category) {
         this.name = category.getName();
         this.color = category.getColor();
-        this.is_private = category.getIsPrivate();
+        this.isPrivate = category.getIsPrivate();
     }
 }

@@ -12,7 +12,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +20,7 @@ import java.io.IOException;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/v1/user")
 public class JoinApi {
     private final EmailJoinService emailJoinService;
 
@@ -50,8 +49,8 @@ public class JoinApi {
         } catch (Exception e) {
             String message = e.getMessage();
 
-            if (message.equals(UserErrorCode.INVALID_LINK.getMessage()))
-                return ResponseEntity.status(401).body(ResponseDto.of(UserErrorCode.INVALID_LINK));
+            if (message.equals(UserErrorCode.INVALID_CODE.getMessage()))
+                return ResponseEntity.status(401).body(ResponseDto.of(UserErrorCode.INVALID_CODE));
             else if (message.equals(UserErrorCode.EMAIL_ALREADY_AUTHENTICATED.getMessage()))
                 return ResponseEntity.status(403).body(ResponseDto.of(UserErrorCode.EMAIL_ALREADY_AUTHENTICATED));
         }
@@ -70,23 +69,23 @@ public class JoinApi {
 
     // 이메일, 닉네임 중복확인
     @GetMapping("/sign-up/check")
-    public ResponseEntity<ResponseDto> checkDuplicate(DuplicateCheckRequestDto dto) {
+    public ResponseEntity<ResponseDto> checkDuplicate(@Valid DuplicateCheckRequestDto dto) {
         emailJoinService.checkDuplicate(dto);
 
         return ResponseEntity.ok(ResponseDto.of(200));
     }
 
     // 이메일 가입
-    @PostMapping(path = "/sign-up/email", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<ResponseDto> join(@Valid @ModelAttribute EmailJoinRequestDto emailJoinRequestDto) throws IOException {
+    @PostMapping("/sign-up/email")
+    public ResponseEntity<ResponseDto> join(@RequestBody @Valid EmailJoinRequestDto emailJoinRequestDto) throws IOException {
         EmailJoinResponseDto emailJoinResponseDto = emailJoinService.join(null, emailJoinRequestDto);
 
         return ResponseEntity.status(201).body(DataResponseDto.of(emailJoinResponseDto, 201));
     }
 
     // 게스트 이메일 가입
-    @PostMapping(path = "/guest/email", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<ResponseDto> join(@RequestHeader @Value("Authorization") String authorization, @Valid @ModelAttribute EmailJoinRequestDto emailJoinRequestDto) throws IOException {
+    @PostMapping("/guest/email")
+    public ResponseEntity<ResponseDto> guestJoin(@RequestHeader @Value("Authorization") String authorization, @RequestBody @Valid EmailJoinRequestDto emailJoinRequestDto) throws IOException {
         EmailJoinResponseDto emailJoinResponseDto = emailJoinService.join(authorization, emailJoinRequestDto);
 
         return ResponseEntity.status(201).body(DataResponseDto.of(emailJoinResponseDto, 201));

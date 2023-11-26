@@ -1,12 +1,7 @@
 package com.choi.doit.domain.user.dao;
 
-import com.choi.doit.domain.model.Role;
 import com.choi.doit.domain.user.domain.UserEntity;
-import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
@@ -15,23 +10,5 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     Boolean existsByEmail(String email);
 
-    @Transactional
-    @Modifying(clearAutomatically = true)
-    @Query(value = "UPDATE UserEntity u SET u.role = :role WHERE u.id = :id")
-    void updateRole(@Param("role") Role role, @Param("id") Long id);
-
-    @Transactional
-    @Modifying(clearAutomatically = true)
-    @Query(value = "UPDATE UserEntity u SET u.email = :email WHERE u.id = :id")
-    void updateEmail(@Param("email") String email, @Param("id") Long id);
-
-    @Transactional
-    @Modifying(clearAutomatically = true)
-    @Query(value = "UPDATE UserEntity u SET u.password = :password WHERE u.id = :id")
-    void updatePassword(@Param("password") String password, @Param("id") Long id);
-
-    @Transactional
-    @Modifying(clearAutomatically = true)
-    @Query(value = "UPDATE UserEntity u SET u.profile_image_path = :imagePath WHERE u.id = :id")
-    void updateProfileImagePath(@Param("imagePath") String imagePath, @Param("id") Long id);
+    Boolean existsByNickname(String nickname);
 }

@@ -7,10 +7,8 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmailLoginRequestDto {
@@ -20,6 +18,6 @@ public class EmailLoginRequestDto {
 
     @NotBlank
     @NotNull
-    @Size(min = 5, max = 20)
+    @Size(min = 8, max = 20)
     private String password;
 }

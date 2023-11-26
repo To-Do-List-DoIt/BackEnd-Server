@@ -12,5 +12,5 @@ public class EditCategoryRequestDto {
     @Size(max = 50)
     private String name;
     private String color;
-    private Boolean is_private;
+    private Boolean isPrivate;
 }

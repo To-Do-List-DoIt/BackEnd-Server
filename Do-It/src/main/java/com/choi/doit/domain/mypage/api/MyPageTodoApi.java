@@ -16,16 +16,16 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/my-page/todo")
+@RequestMapping("/api/v1/my-page/todo")
 public class MyPageTodoApi {
     private final MyPageTodoService myPageTodoService;
 
     // 미완료 To-Do 존재 여부 조회
     @RequestMapping(method = RequestMethod.HEAD, value = "/unfinished")
     public ResponseEntity<ResponseDto> hasUnfinishedTodo() {
-        myPageTodoService.hasUnfinishedTodo();
+        Boolean isExist = myPageTodoService.hasUnfinishedTodo();
 
-        return ResponseEntity.ok(ResponseDto.of(200));
+        return ResponseEntity.ok(DataResponseDto.of(isExist, 200));
     }
 
     // 미완료 To-Do 리스트 조회

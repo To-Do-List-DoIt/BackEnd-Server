@@ -16,6 +16,7 @@ import com.choi.doit.global.util.SecurityContextUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -29,6 +30,7 @@ public class TodoCUDService {
     private final SecurityContextUtil securityContextUtil;
     private final DatetimeUtil datetimeUtil;
 
+    @Transactional
     public NewTodoResponseDto addNewTodo(NewTodoRequestDto newTodoRequestDto) throws RestApiException {
         UserEntity user = securityContextUtil.getUserEntity();
 
@@ -44,6 +46,7 @@ public class TodoCUDService {
         return new NewTodoResponseDto(todoRepository.save(todoEntity).getId());
     }
 
+    @Transactional
     public void deleteTodo(Long todo_id) throws RestApiException {
         UserEntity user = securityContextUtil.getUserEntity();
         TodoEntity todoEntity = todoRepository.findById(todo_id)
@@ -57,6 +60,7 @@ public class TodoCUDService {
         todoRepository.delete(todoEntity);
     }
 
+    @Transactional
     public void editTodo(Long todo_id, EditTodoRequestDto editTodoRequestDto) throws RestApiException {
         UserEntity user = securityContextUtil.getUserEntity();
         TodoEntity todoEntity = todoRepository.findById(todo_id)
@@ -75,6 +79,7 @@ public class TodoCUDService {
         todoEntity.update(editTodoRequestDto.getContent(), category, date, time);
     }
 
+    @Transactional
     public CheckResponseDto setCheck(Long todo_id) {
         UserEntity user = securityContextUtil.getUserEntity();
         TodoEntity todoEntity = todoRepository.findById(todo_id)

@@ -5,10 +5,12 @@ import com.choi.doit.domain.friend.dto.FriendItemDto;
 import com.choi.doit.domain.user.domain.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.Optional;
 
+@Repository
 public interface FriendRequestRepository extends JpaRepository<FriendRequestEntity, Long> {
     Optional<FriendRequestEntity> findByUserAndTargetUser(UserEntity user, UserEntity targetUser);
 
@@ -21,4 +23,8 @@ public interface FriendRequestRepository extends JpaRepository<FriendRequestEnti
             "from FriendRequest f " +
             "where f.targetUser = :targetUser")
     ArrayList<FriendItemDto> findAllByTargetUser(UserEntity targetUser);
+
+    void deleteAllByUser(UserEntity user);
+
+    void deleteAllByTargetUser(UserEntity target);
 }

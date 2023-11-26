@@ -13,9 +13,12 @@ import com.choi.doit.domain.user.exception.UserErrorCode;
 import com.choi.doit.domain.user.vo.EmailVo;
 import com.choi.doit.domain.user.vo.NicknameVo;
 import com.choi.doit.global.error.exception.RestApiException;
-import com.choi.doit.global.util.*;
+import com.choi.doit.global.util.DuplicateCheckUtil;
+import com.choi.doit.global.util.MailUtil;
+import com.choi.doit.global.util.RandomUtil;
+import com.choi.doit.global.util.RedisUtil;
 import com.choi.doit.global.util.jwt.JwtUtil;
-import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,11 +26,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,45 +47,44 @@ public class EmailJoinService {
     private final SpringTemplateEngine springTemplateEngine;
     private final RandomUtil randomUtil;
     private final RedisTemplate<String, Object> redisTemplate;
-    private final ImageHandler imageHandler;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final TodoDefaultSettingService todoDefaultSettingService;
 
     @Transactional
-    public Long setGuestInfo(UserEntity user, EmailJoinRequestDto dto, String profile_path) {
+    public Long setGuestInfo(UserEntity user, EmailJoinRequestDto dto) {
         Long user_id = user.getId();
-        String email = dto.getEmail();
-        String password = dto.getPassword();
 
-        userRepository.updateRole(Role.MEMBER, user_id);
-        userRepository.updateEmail(email, user_id);
-        userRepository.updatePassword(password, user_id);
-        userRepository.updateProfileImagePath(profile_path, user_id);
+        user.updateRole(Role.MEMBER);
+        user.updateEmail(dto.getEmail());
+        user.updatePassword(dto.getPassword());
+        user.updateNickname(dto.getNickname());
 
         return user_id;
     }
 
     // 인증 여부 검사
+    @Transactional(readOnly = true)
     public boolean isAuthenticated(String email) {
         Boolean is_authenticated = (Boolean) redisTemplate.opsForHash().get(email, EmailAuthKeyEnum.IS_AUTHENTICATED.getKey());
 
         if (is_authenticated == null)
             // 해당 이메일이 존재하지 않음
-            throw new RestApiException(UserErrorCode.EMAIL_NOT_FOUND);
+            throw new RestApiException(UserErrorCode.EMAIL_NOT_EXIST);
 
         return is_authenticated;
     }
 
     // Email과 Code 매칭
-    private void matchEmailAndCode(@NotEmpty String email, @NotEmpty String code, boolean allowDuplicateRequest) {
+    @Transactional(readOnly = true)
+    public void matchEmailAndCode(@NotEmpty String email, @NotEmpty String code, boolean allowDuplicateRequest) {
         // Redis 데이터 조회
         String code_data = (String) redisTemplate.opsForHash().get(email, EmailAuthKeyEnum.CODE.getKey());
         Boolean is_authorized = (Boolean) redisTemplate.opsForHash().get(email, EmailAuthKeyEnum.IS_AUTHENTICATED.getKey());
 
         if (!code.equals(code_data))
-            // 올바르지 않은 링크
-            throw new RestApiException(UserErrorCode.INVALID_LINK);
+            // 올바르지 않은 코드
+            throw new RestApiException(UserErrorCode.INVALID_CODE);
         else if (allowDuplicateRequest && Boolean.TRUE.equals(is_authorized))
             // 링크 중복 클릭
             throw new RestApiException(UserErrorCode.EMAIL_ALREADY_AUTHENTICATED);
@@ -96,6 +97,7 @@ public class EmailJoinService {
     }
 
     // Redis 인증 정보 저장
+    @Transactional
     public void saveMailAuthInfo(String email, String code, boolean isAuth) {
         Map<String, Object> value = new HashMap<>();
         value.put(EmailAuthKeyEnum.CODE.getKey(), code);
@@ -104,6 +106,8 @@ public class EmailJoinService {
         redisUtil.opsForHashPut(email, value, 2);
     }
 
+    // 이메일 링크 전송
+    @Transactional
     public EmailAuthResponseDto sendLink(EmailRequestDto emailRequestDto) {
         String email = emailRequestDto.getEmail();
 
@@ -123,6 +127,7 @@ public class EmailJoinService {
     }
 
     // 이메일 링크 변경
+    @Transactional
     public EmailAuthResponseDto changeLink(EmailAuthChangeRequestDto emailAuthChangeRequestDto) {
         String prev_email = emailAuthChangeRequestDto.getPrev_email();
         String code = emailAuthChangeRequestDto.getCode();
@@ -138,6 +143,7 @@ public class EmailJoinService {
     }
 
     // 사용자 이메일 인증 확인 링크
+    @Transactional
     public void confirmEmail(EmailAuthConfirmRequestDto emailAuthConfirmRequestDto) {
         String email = emailAuthConfirmRequestDto.getEmail();
         String code = emailAuthConfirmRequestDto.getCode();
@@ -150,6 +156,7 @@ public class EmailJoinService {
     }
 
     // 이메일 인증 여부 확인
+    @Transactional(readOnly = true)
     public EmailAuthInfoResponseDto checkAuthInfo(EmailRequestDto emailRequestDto) {
         String email = emailRequestDto.getEmail();
 
@@ -158,15 +165,15 @@ public class EmailJoinService {
     }
 
     // 이메일 가입
-    public EmailJoinResponseDto join(String authorization, EmailJoinRequestDto emailJoinRequestDto) throws IOException {
+    @Transactional
+    public EmailJoinResponseDto join(String authorization, EmailJoinRequestDto emailJoinRequestDto) {
         UserEntity user = null;
         if (authorization != null)
-            user = jwtUtil.validateAccessToken(authorization);
+            user = jwtUtil.validateAccessToken(jwtUtil.decodeBearer(authorization));
 
         String email = emailJoinRequestDto.getEmail();
         String password = emailJoinRequestDto.getPassword();
-        MultipartFile image = emailJoinRequestDto.getProfile();
-        String profile_path = null;
+        String nickname = emailJoinRequestDto.getNickname();
 
         // 인증 여부 조회
         if (!isAuthenticated(emailJoinRequestDto.getEmail()))
@@ -175,26 +182,26 @@ public class EmailJoinService {
         // 이메일 중복 검사
         duplicateCheckUtil.isDupEmail(email);
 
-        // 프로필 이미지 저장
-        if (image != null)
-            profile_path = imageHandler.saveProfileImage(email, image);
+        // 닉네임 중복 검사
+        duplicateCheckUtil.isDupNickname(nickname);
 
         // 비밀번호 암호화
         emailJoinRequestDto.setPassword(passwordEncoder.encode(password));
 
         // 유저 데이터 저장 + 기본 카테고리 저장
         if (user == null) {
-            UserEntity newUser = userRepository.save(emailJoinRequestDto.toEntity(profile_path));
+            UserEntity newUser = userRepository.save(emailJoinRequestDto.toEntity());
 
             // 기본 카테고리 저장
             todoDefaultSettingService.addDefaultCategory(newUser);
 
             return new EmailJoinResponseDto(newUser.getId());
         } else
-            return new EmailJoinResponseDto(setGuestInfo(user, emailJoinRequestDto, profile_path));
+            return new EmailJoinResponseDto(setGuestInfo(user, emailJoinRequestDto));
     }
 
-    public void checkDuplicate(DuplicateCheckRequestDto dto) throws RestApiException {
+    @Transactional(readOnly = true)
+    public void checkDuplicate(@Valid DuplicateCheckRequestDto dto) throws RestApiException {
         String type = dto.getType();
         String value = dto.getValue();
 
@@ -203,7 +210,7 @@ public class EmailJoinService {
             duplicateCheckUtil.isDupEmail(vo);
         } else if (type.equals("nickname")) {
             NicknameVo vo = new NicknameVo(value);
-            // duplicateCheckUtil.isDupNickname(vo);
+            duplicateCheckUtil.isDupNickname(vo);
         } else {
             throw new RestApiException(UserErrorCode.INVALID_TYPE);
         }

@@ -35,8 +35,10 @@ class FriendServiceTest {
     UserEntity user;
     final String email = "abc@abc.com";
     final String password = "password1234";
+    final String nickname = "genius";
     UserEntity friend1;
     final String friend1Email = "friend1@abc.com";
+    final String friend1Nickname = "friend";
 
     @Autowired
     FriendServiceTest(FriendService friendService, UserRepository userRepository, FriendRequestRepository friendRequestRepository, FriendRepository friendRepository) {
@@ -49,10 +51,10 @@ class FriendServiceTest {
     @BeforeEach
     void addMockData() {
         // user
-        user = userRepository.save(new EmailJoinRequestDto(email, password, null).toEntity(null));
+        user = userRepository.save(new EmailJoinRequestDto(email, password, nickname).toEntity());
 
         // friends
-        friend1 = userRepository.save(new EmailJoinRequestDto(friend1Email, password, null).toEntity(null));
+        friend1 = userRepository.save(new EmailJoinRequestDto(friend1Email, password, friend1Nickname).toEntity());
     }
 
     @DisplayName("친구 신청")
@@ -96,7 +98,7 @@ class FriendServiceTest {
 
         // when
         FriendListDto friendListDto = friendService.getSentRequestList();
-        ArrayList<FriendItemDto> list = friendListDto.getData();
+        ArrayList<FriendItemDto> list = friendListDto.getList();
 
         // then
         assertThat(list.size()).isEqualTo(1);
@@ -112,7 +114,7 @@ class FriendServiceTest {
 
         // when
         FriendListDto friendListDto = friendService.getReceivedRequestList();
-        ArrayList<FriendItemDto> list = friendListDto.getData();
+        ArrayList<FriendItemDto> list = friendListDto.getList();
 
         // then
         assertThat(list.size()).isEqualTo(1);
@@ -129,7 +131,7 @@ class FriendServiceTest {
 
         // when
         FriendListDto friendListDto = friendService.getList();
-        ArrayList<FriendItemDto> list = friendListDto.getData();
+        ArrayList<FriendItemDto> list = friendListDto.getList();
 
         // then
         assertThat(list.size()).isEqualTo(1);

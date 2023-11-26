@@ -49,7 +49,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws RestApiException, SpringSecurityException, ServletException, IOException, ExpiredJwtException {
         // uri 검사하여 필터 통과 여부 결정
         String uri = request.getRequestURI();
-        if (uri.contains("/login") || uri.contains("/sign-up") || uri.equals("/user/guest")) {
+        if (uri.contains("/login") || uri.contains("/sign-up") || uri.contains("/user/guest")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -58,7 +58,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         String refresh_token = jwtUtil.decodeHeader(false, request);
 
         // refresh token을 헤더에 가지고 있는 경우 token 재발급
-        if (request.getRequestURI().equals("/user/token") && refresh_token != null) {
+        if (request.getRequestURI().contains("/user/token") && refresh_token != null) {
             UserEntity user = jwtUtil.validateRefreshToken(refresh_token);
             LoginResponseDto dto = jwtUtil.generateTokens(user);
 
