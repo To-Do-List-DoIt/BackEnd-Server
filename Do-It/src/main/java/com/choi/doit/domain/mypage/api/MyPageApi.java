@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.URI;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -35,7 +34,7 @@ public class MyPageApi {
     public ResponseEntity<ResponseDto> editProfileImage(@RequestPart MultipartFile profile) throws IOException {
         String path = myPageService.setProfileImage(profile);
 
-        return ResponseEntity.created(URI.create(path)).body(ResponseDto.of(201));
+        return ResponseEntity.status(201).body(DataResponseDto.of(path, 201));
     }
 
     // 이메일 변경
