@@ -66,6 +66,7 @@ public class MyPageService {
     }
 
     // 프로필 이미지 변경
+    @Transactional
     public String setProfileImage(MultipartFile file) throws IOException, RestApiException {
         UserEntity user = securityContextUtil.getUserEntity();
 
@@ -84,6 +85,7 @@ public class MyPageService {
     }
 
     // 이메일 변경
+    @Transactional
     public String setEmail(EditEmailRequestDto editEmailRequestDto) throws RestApiException {
         UserEntity user = securityContextUtil.getUserEntity();
         String new_email = editEmailRequestDto.getEmail();
@@ -108,6 +110,7 @@ public class MyPageService {
     }
 
     // 비밀번호 변경
+    @Transactional
     public void setPassword(EditPasswordRequestDto editPasswordRequestDto) throws RestApiException {
         UserEntity user = securityContextUtil.getUserEntity();
         String new_password = editPasswordRequestDto.getPassword();

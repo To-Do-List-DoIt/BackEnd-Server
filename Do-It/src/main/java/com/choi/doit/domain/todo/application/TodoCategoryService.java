@@ -27,12 +27,14 @@ public class TodoCategoryService {
     private final TodoRepository todoRepository;
     private final SecurityContextUtil securityContextUtil;
 
+    @Transactional(readOnly = true)
     public ArrayList<CategoryListItemDto> readAll() {
         UserEntity user = securityContextUtil.getUserEntity();
 
         return categoryRepository.findAllByUserWithJpql(user);
     }
 
+    @Transactional
     public AddCategoryResponseDto addNew(AddCategoryRequestDto addCategoryRequestDto) {
         UserEntity user = securityContextUtil.getUserEntity();
 
@@ -46,6 +48,7 @@ public class TodoCategoryService {
         return new AddCategoryResponseDto(category.getId(), new CategoryDetailDto(category));
     }
 
+    @Transactional
     public CategoryDetailDto modify(Long category_id, EditCategoryRequestDto editCategoryRequestDto) throws RestApiException {
         UserEntity user = securityContextUtil.getUserEntity();
 
@@ -80,7 +83,7 @@ public class TodoCategoryService {
 
         // 카테고리에 해당되는 투두 데이터 업데이트
         todoRepository.updateAllByUserAndCategory(user, category);
-        
+
         // 데이터 삭제
         categoryRepository.delete(category);
     }

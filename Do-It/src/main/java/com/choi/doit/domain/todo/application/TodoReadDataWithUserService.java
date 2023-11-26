@@ -13,6 +13,7 @@ import com.choi.doit.global.error.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.LinkedList;
@@ -25,6 +26,7 @@ public class TodoReadDataWithUserService {
     private final CategoryRepository categoryRepository;
 
     // 날짜(하루) 기준 일정 조회
+    @Transactional(readOnly = true)
     public DayTodoDto readDay(UserEntity user, LocalDate date) {
         LinkedList<TodoItemDto> result = todoRepository.findAllByUserAndDateOrderByTimeAscWithJpql(user, date);
 
@@ -32,6 +34,7 @@ public class TodoReadDataWithUserService {
     }
 
     // 카테고리 & 날짜(하루) 기준 일정 조회
+    @Transactional(readOnly = true)
     public CategoryDayTodoDto readCategoryDay(UserEntity user, LocalDate date, CategoryEntity category) throws RestApiException {
         LinkedList<TodoItemDto> result = todoRepository.findAllByUserAndDateAndCategoryOrderByTimeAscWithJpql(user, date, category);
 
@@ -39,6 +42,7 @@ public class TodoReadDataWithUserService {
     }
 
     // 월별 전체 일정 개수 조회
+    @Transactional(readOnly = true)
     public MonthCountDto readMonthCount(UserEntity user, LocalDate date) throws RestApiException {
         LocalDate startDate = date.withDayOfMonth(1);
         LocalDate endDate = date.withDayOfMonth(date.lengthOfMonth()); // 해당 달의 마지막 날

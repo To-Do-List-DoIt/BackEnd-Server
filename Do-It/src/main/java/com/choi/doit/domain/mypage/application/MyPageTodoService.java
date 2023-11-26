@@ -11,6 +11,7 @@ import com.choi.doit.global.error.exception.RestApiException;
 import com.choi.doit.global.util.SecurityContextUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.LinkedList;
 
@@ -21,6 +22,7 @@ public class MyPageTodoService {
     private final SecurityContextUtil securityContextUtil;
 
     // 미완료 To-Do 존재 여부 조회
+    @Transactional(readOnly = true)
     public void hasUnfinishedTodo() throws RestApiException {
         UserEntity user = securityContextUtil.getUserEntity();
         Boolean existsUnfinishedTodo = todoRepository.existsByCheckStatusIsFalseAndUser(user);
@@ -30,6 +32,7 @@ public class MyPageTodoService {
     }
 
     // 미완료 To-Do 리스트 조회
+    @Transactional(readOnly = true)
     public ReadTodoWithoutStatusListResponseDto readUnfinishedTodoList() {
         UserEntity user = securityContextUtil.getUserEntity();
         LinkedList<TodoListItemWithoutStatusDto> list = todoRepository.findAllByUserAndCheckStatusIsFalseWithJpql(user);
@@ -38,6 +41,7 @@ public class MyPageTodoService {
     }
 
     // 완료 To-Do 개수 조회
+    @Transactional(readOnly = true)
     public CountFinishedTodoResponseDto countFinishedTodo() {
         UserEntity user = securityContextUtil.getUserEntity();
         Long count = todoRepository.countAllByUserAndCheckStatusIsTrue(user);
@@ -46,6 +50,7 @@ public class MyPageTodoService {
     }
 
     // 완료 To-Do 상위 2건 조회
+    @Transactional(readOnly = true)
     public ReadTodoWithoutStatusListResponseDto readFinishedTodoListTop2() {
         UserEntity user = securityContextUtil.getUserEntity();
         LinkedList<TodoEntity> data = todoRepository.findTop2ByUserAndCheckStatusIsTrueOrderByDateDesc(user);

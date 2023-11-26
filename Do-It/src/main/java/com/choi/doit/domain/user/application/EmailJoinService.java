@@ -18,7 +18,6 @@ import com.choi.doit.global.util.MailUtil;
 import com.choi.doit.global.util.RandomUtil;
 import com.choi.doit.global.util.RedisUtil;
 import com.choi.doit.global.util.jwt.JwtUtil;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +26,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
@@ -64,6 +64,7 @@ public class EmailJoinService {
     }
 
     // 인증 여부 검사
+    @Transactional(readOnly = true)
     public boolean isAuthenticated(String email) {
         Boolean is_authenticated = (Boolean) redisTemplate.opsForHash().get(email, EmailAuthKeyEnum.IS_AUTHENTICATED.getKey());
 
@@ -75,7 +76,8 @@ public class EmailJoinService {
     }
 
     // Email과 Code 매칭
-    private void matchEmailAndCode(@NotEmpty String email, @NotEmpty String code, boolean allowDuplicateRequest) {
+    @Transactional(readOnly = true)
+    public void matchEmailAndCode(@NotEmpty String email, @NotEmpty String code, boolean allowDuplicateRequest) {
         // Redis 데이터 조회
         String code_data = (String) redisTemplate.opsForHash().get(email, EmailAuthKeyEnum.CODE.getKey());
         Boolean is_authorized = (Boolean) redisTemplate.opsForHash().get(email, EmailAuthKeyEnum.IS_AUTHENTICATED.getKey());
@@ -95,6 +97,7 @@ public class EmailJoinService {
     }
 
     // Redis 인증 정보 저장
+    @Transactional
     public void saveMailAuthInfo(String email, String code, boolean isAuth) {
         Map<String, Object> value = new HashMap<>();
         value.put(EmailAuthKeyEnum.CODE.getKey(), code);
@@ -104,6 +107,7 @@ public class EmailJoinService {
     }
 
     // 이메일 링크 전송
+    @Transactional
     public EmailAuthResponseDto sendLink(EmailRequestDto emailRequestDto) {
         String email = emailRequestDto.getEmail();
 
@@ -123,6 +127,7 @@ public class EmailJoinService {
     }
 
     // 이메일 링크 변경
+    @Transactional
     public EmailAuthResponseDto changeLink(EmailAuthChangeRequestDto emailAuthChangeRequestDto) {
         String prev_email = emailAuthChangeRequestDto.getPrev_email();
         String code = emailAuthChangeRequestDto.getCode();
@@ -138,6 +143,7 @@ public class EmailJoinService {
     }
 
     // 사용자 이메일 인증 확인 링크
+    @Transactional
     public void confirmEmail(EmailAuthConfirmRequestDto emailAuthConfirmRequestDto) {
         String email = emailAuthConfirmRequestDto.getEmail();
         String code = emailAuthConfirmRequestDto.getCode();
@@ -150,6 +156,7 @@ public class EmailJoinService {
     }
 
     // 이메일 인증 여부 확인
+    @Transactional(readOnly = true)
     public EmailAuthInfoResponseDto checkAuthInfo(EmailRequestDto emailRequestDto) {
         String email = emailRequestDto.getEmail();
 
@@ -158,6 +165,7 @@ public class EmailJoinService {
     }
 
     // 이메일 가입
+    @Transactional
     public EmailJoinResponseDto join(String authorization, EmailJoinRequestDto emailJoinRequestDto) {
         UserEntity user = null;
         if (authorization != null)
@@ -192,6 +200,7 @@ public class EmailJoinService {
             return new EmailJoinResponseDto(setGuestInfo(user, emailJoinRequestDto));
     }
 
+    @Transactional(readOnly = true)
     public void checkDuplicate(@Valid DuplicateCheckRequestDto dto) throws RestApiException {
         String type = dto.getType();
         String value = dto.getValue();
