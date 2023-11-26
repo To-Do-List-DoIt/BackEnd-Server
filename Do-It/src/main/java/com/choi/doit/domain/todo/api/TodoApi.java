@@ -33,11 +33,11 @@ public class TodoApi {
     public ResponseEntity<ResponseDto> delete(@PathVariable(value = "todo-id") Long todo_id) {
         todoCUDService.deleteTodo(todo_id);
 
-        return ResponseEntity.status(201).body(ResponseDto.of(201));
+        return ResponseEntity.status(200).body(ResponseDto.of(200));
     }
 
     @PatchMapping("/{todo-id}")
-    public ResponseEntity<ResponseDto> edit(@PathVariable(value = "todo-id") Long todo_id, @Valid EditTodoRequestDto editTodoRequestDto) {
+    public ResponseEntity<ResponseDto> edit(@PathVariable(value = "todo-id") Long todo_id, @RequestBody @Valid EditTodoRequestDto editTodoRequestDto) {
         todoCUDService.editTodo(todo_id, editTodoRequestDto);
 
         return ResponseEntity.status(201).body(ResponseDto.of(201));
