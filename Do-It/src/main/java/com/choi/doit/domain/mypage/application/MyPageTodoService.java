@@ -3,7 +3,6 @@ package com.choi.doit.domain.mypage.application;
 import com.choi.doit.domain.mypage.dto.TodoListItemWithoutStatusDto;
 import com.choi.doit.domain.mypage.dto.response.CountFinishedTodoResponseDto;
 import com.choi.doit.domain.mypage.dto.response.ReadTodoWithoutStatusListResponseDto;
-import com.choi.doit.domain.mypage.exception.MyPageErrorCode;
 import com.choi.doit.domain.todo.dao.TodoRepository;
 import com.choi.doit.domain.todo.domain.TodoEntity;
 import com.choi.doit.domain.user.domain.UserEntity;
@@ -23,12 +22,10 @@ public class MyPageTodoService {
 
     // 미완료 To-Do 존재 여부 조회
     @Transactional(readOnly = true)
-    public void hasUnfinishedTodo() throws RestApiException {
+    public Boolean hasUnfinishedTodo() throws RestApiException {
         UserEntity user = securityContextUtil.getUserEntity();
-        Boolean existsUnfinishedTodo = todoRepository.existsByCheckStatusIsFalseAndUser(user);
-
-        if (!existsUnfinishedTodo)
-            throw new RestApiException(MyPageErrorCode.UNFINISHED_TODO_NOT_FOUND);
+        
+        return todoRepository.existsByCheckStatusIsFalseAndUser(user);
     }
 
     // 미완료 To-Do 리스트 조회
