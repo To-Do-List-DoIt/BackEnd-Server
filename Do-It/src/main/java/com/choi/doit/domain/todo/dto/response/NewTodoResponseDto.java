@@ -8,5 +8,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class NewTodoResponseDto {
-    private Long todo_id;
+    private Long todoId;
 }

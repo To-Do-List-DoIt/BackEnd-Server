@@ -15,10 +15,10 @@ import java.util.Optional;
 public interface CategoryRepository extends JpaRepository<CategoryEntity, Long> {
     Optional<CategoryEntity> findByUserAndName(UserEntity user, String name);
 
-    ArrayList<CategoryEntity> findAllByUser(UserEntity user);
-
-    @Query(value = "select new com.choi.doit.domain.todo.dto.CategoryListItemDto(c.name, c.color) " +
+    @Query(value = "select new com.choi.doit.domain.todo.dto.CategoryListItemDto(c.name, c.color, c.isPrivate) " +
             "from CategoryEntity c " +
             "where c.user = :user")
     ArrayList<CategoryListItemDto> findAllByUserWithJpql(@Param(value = "user") UserEntity user);
+
+    void deleteAllByUser(UserEntity user);
 }

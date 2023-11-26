@@ -6,19 +6,18 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum UserErrorCode implements ErrorCode {
-    INVALID_CODE(HttpStatus.UNAUTHORIZED, "Invalid code."),
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not found."),
-    USER_ID_REQUIRED(HttpStatus.BAD_REQUEST, "User-id required."),
-    EMAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "Email not found."),
-    INVALID_ID_TOKEN(HttpStatus.UNAUTHORIZED, "Invalid id-token."),
-    LOGIN_FAILED(HttpStatus.UNAUTHORIZED, "Login failed."),
+    EMAIL_NOT_EXIST(HttpStatus.BAD_REQUEST, "Email does not exist."),
     INVALID_TYPE(HttpStatus.BAD_REQUEST, "Invalid type."),
-    UNAUTHENTICATED_EMAIL(HttpStatus.UNAUTHORIZED, "Email authentication required."),
-    INVALID_EMAIL(HttpStatus.UNAUTHORIZED, "Invalid email."),
-    INVALID_LINK(HttpStatus.UNAUTHORIZED, "Invalid link."),
-    EMAIL_ALREADY_AUTHENTICATED(HttpStatus.FORBIDDEN, "Email already authenticated."),
-    DUPLICATED_NICKNAME(HttpStatus.BAD_REQUEST, "Nickname already exists."),
     DUPLICATED_EMAIL(HttpStatus.BAD_REQUEST, "Email already exists."),
+    DUPLICATED_NICKNAME(HttpStatus.BAD_REQUEST, "Nickname already exists."),
+    USER_ID_REQUIRED(HttpStatus.BAD_REQUEST, "User-id required."),
+    UNAUTHENTICATED_EMAIL(HttpStatus.UNAUTHORIZED, "Email authentication required."),
+    INVALID_CODE(HttpStatus.UNAUTHORIZED, "Invalid code."),
+    INVALID_ID_TOKEN(HttpStatus.UNAUTHORIZED, "Invalid id-token."),
+    INVALID_EMAIL(HttpStatus.UNAUTHORIZED, "Invalid email."),
+    LOGIN_FAILED(HttpStatus.UNAUTHORIZED, "Login failed."),
+    EMAIL_ALREADY_AUTHENTICATED(HttpStatus.FORBIDDEN, "Email already authenticated."),
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not found."),
     EMAIL_SENDING_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "Email Sending failed.");
 
     private final HttpStatus httpStatus;

@@ -58,7 +58,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         String refresh_token = jwtUtil.decodeHeader(false, request);
 
         // refresh token을 헤더에 가지고 있는 경우 token 재발급
-        if (request.getRequestURI().equals("/user/token") && refresh_token != null) {
+        if (request.getRequestURI().contains("/user/token") && refresh_token != null) {
             UserEntity user = jwtUtil.validateRefreshToken(refresh_token);
             LoginResponseDto dto = jwtUtil.generateTokens(user);
 

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/friend")
+@RequestMapping("/api/v1/friend")
 public class FriendApi {
     private final FriendService friendService;
 

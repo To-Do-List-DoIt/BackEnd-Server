@@ -1,8 +1,8 @@
 package com.choi.doit.global.oauth2;
 
 import com.choi.doit.domain.model.Provider;
+import com.choi.doit.domain.user.dto.OAuthUserInfoDto;
 import com.choi.doit.domain.user.exception.UserErrorCode;
-import com.choi.doit.domain.user.vo.OAuthUserInfoDto;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;

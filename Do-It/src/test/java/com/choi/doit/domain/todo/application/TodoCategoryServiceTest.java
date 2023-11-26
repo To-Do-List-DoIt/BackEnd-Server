@@ -104,7 +104,7 @@ class TodoCategoryServiceTest {
 
         assertThat(dto.getName()).isEqualTo(name);
         assertThat(dto.getColor()).isEqualTo(color);
-        assertThat(dto.is_private()).isEqualTo(!is_private);
+        assertThat(dto.getIsPrivate()).isEqualTo(!is_private);
     }
 
     @DisplayName("데이터 삭제")

@@ -27,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.LinkedList;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -85,9 +84,9 @@ class FriendTodoServiceTest {
         todoRepository.save(todo);
     }
 
+    @Test
     @DisplayName("친구 정보 유효성 검사")
     @WithMockUser(username = EMAIL)
-    @Test
     void getFriendEntity() {
         // given
         // when
@@ -97,9 +96,9 @@ class FriendTodoServiceTest {
         assertThat(friend.getEmail()).isEqualTo(FRIEND_EMAIL);
     }
 
+    @Test
     @DisplayName("친구의 하루 일정 조회")
     @WithMockUser(username = EMAIL)
-    @Test
     void readDay() {
         // given
         String dateStr = "2023-09-16";
@@ -108,18 +107,18 @@ class FriendTodoServiceTest {
 
         // when
         DayTodoDto dto = friendTodoService.readDay(FRIEND_EMAIL, dateStr);
-        Map<String, LinkedList<TodoItemDto>> result = dto.getResult();
+        LinkedList<TodoItemDto> result = dto.getResult();
 
         // then
-        assertThat(result.get(CATEGORY_KEY).size()).isEqualTo(1);
-        assertThat(result.get(CATEGORY_KEY).get(0).getContent()).isEqualTo(CONTENT);
-        assertThat(result.get(CATEGORY_KEY).get(0).getDate()).isEqualTo(datetimeUtil.parseDate(dateStr));
-        assertThat(result.get(CATEGORY_KEY).get(0).getTime()).isEqualTo(datetimeUtil.parseTime(timeStr));
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0).getContent()).isEqualTo(CONTENT);
+        assertThat(result.get(0).getDate()).isEqualTo(datetimeUtil.parseDate(dateStr));
+        assertThat(result.get(0).getTime()).isEqualTo(datetimeUtil.parseTime(timeStr));
     }
 
+    @Test
     @DisplayName("친구의 카테고리 설정한 하루 일정 조회")
     @WithMockUser(username = EMAIL)
-    @Test
     void readCategoryDay() {
         // given
         String dateStr = "2023-09-16";
@@ -138,9 +137,9 @@ class FriendTodoServiceTest {
         assertThat(list.get(0).getTime()).isEqualTo(datetimeUtil.parseTime(timeStr));
     }
 
+    @Test
     @DisplayName("친구의 월별 전체 일정 개수 조회")
     @WithMockUser(username = EMAIL)
-    @Test
     void readMonthCount() {
         // given
         String monthStr = "2023-09";

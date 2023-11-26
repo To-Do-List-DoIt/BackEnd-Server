@@ -20,7 +20,7 @@ import java.io.IOException;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/v1/user")
 public class JoinApi {
     private final EmailJoinService emailJoinService;
 
@@ -49,8 +49,8 @@ public class JoinApi {
         } catch (Exception e) {
             String message = e.getMessage();
 
-            if (message.equals(UserErrorCode.INVALID_LINK.getMessage()))
-                return ResponseEntity.status(401).body(ResponseDto.of(UserErrorCode.INVALID_LINK));
+            if (message.equals(UserErrorCode.INVALID_CODE.getMessage()))
+                return ResponseEntity.status(401).body(ResponseDto.of(UserErrorCode.INVALID_CODE));
             else if (message.equals(UserErrorCode.EMAIL_ALREADY_AUTHENTICATED.getMessage()))
                 return ResponseEntity.status(403).body(ResponseDto.of(UserErrorCode.EMAIL_ALREADY_AUTHENTICATED));
         }

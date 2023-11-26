@@ -20,9 +20,9 @@ public class TodoDefaultSettingService {
         final String DEFAULT_1_NAME = "공부";
         final String DEFAULT_2_NAME = "일상";
         final String DEFAULT_3_NAME = "운동";
-        final String DEFAULT_1_COLOR = "FF5E38";
-        final String DEFAULT_2_COLOR = "0052FE";
-        final String DEFAULT_3_COLOR = "FFD917";
+        final String DEFAULT_1_COLOR = "#FF5E38";
+        final String DEFAULT_2_COLOR = "#0052FE";
+        final String DEFAULT_3_COLOR = "#FFD917";
 
         categoryRepository.save(new CategoryEntity(user, DEFAULT_1_NAME, DEFAULT_1_COLOR));
         categoryRepository.save(new CategoryEntity(user, DEFAULT_2_NAME, DEFAULT_2_COLOR));

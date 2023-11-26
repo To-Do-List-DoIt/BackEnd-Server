@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 import java.time.Duration;
 import java.util.*;
 
-import static com.choi.doit.global.error.GlobalErrorCode.TOKEN_REQUIRED;
+import static com.choi.doit.global.error.GlobalErrorCode.ACCESS_TOKEN_REQUIRED;
 import static io.jsonwebtoken.Jwts.builder;
 import static io.jsonwebtoken.Jwts.parser;
 
@@ -95,7 +95,7 @@ public class JwtUtil {
 
         String header_value = request.getHeader(header);
         if (isAccessToken && header_value == null)
-            throw new AuthenticationServiceException(TOKEN_REQUIRED.getMessage());
+            throw new AuthenticationServiceException(ACCESS_TOKEN_REQUIRED.getMessage());
         else if (header_value == null)
             return null;
 
@@ -109,7 +109,7 @@ public class JwtUtil {
 
         // user 정보 존재 여부 검사
         UserEntity user = userRepository.findById(((Number) payloads.get("user_id")).longValue())
-                .orElseThrow(() -> new RestApiException(GlobalErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new RestApiException(GlobalErrorCode.INVALID_TOKEN));
 
         // refresh token 존재 여부 검사
         String refresh = redisUtil.opsForValueGet(user.getId() + "_refresh");
@@ -131,9 +131,9 @@ public class JwtUtil {
         // refresh token 존재 여부 검사
         String refresh = redisUtil.opsForValueGet(user.getId() + "_refresh");
         if (refresh == null)
-            throw new RestApiException(GlobalErrorCode.TOKEN_REQUIRED);
+            throw new RestApiException(GlobalErrorCode.LOGIN_REQUIRED);
         else if (!refresh.equals(refresh_token))
-            throw new SpringSecurityException(GlobalErrorCode.AUTHENTICATION_FAILED);
+            throw new SpringSecurityException(GlobalErrorCode.AUTHORIZATION_FAILED);
 
         return user;
     }

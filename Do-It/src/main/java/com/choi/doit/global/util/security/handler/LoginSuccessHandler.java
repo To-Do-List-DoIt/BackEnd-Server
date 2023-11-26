@@ -1,4 +1,4 @@
-package com.choi.doit.domain.user.application.handler;
+package com.choi.doit.global.util.security.handler;
 
 import com.choi.doit.domain.user.dao.UserRepository;
 import com.choi.doit.domain.user.domain.UserEntity;

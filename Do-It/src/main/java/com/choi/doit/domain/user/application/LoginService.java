@@ -5,10 +5,10 @@ import com.choi.doit.domain.model.Role;
 import com.choi.doit.domain.todo.application.TodoDefaultSettingService;
 import com.choi.doit.domain.user.dao.UserRepository;
 import com.choi.doit.domain.user.domain.UserEntity;
+import com.choi.doit.domain.user.dto.OAuthUserInfoDto;
 import com.choi.doit.domain.user.dto.response.GuestLoginResponseDto;
 import com.choi.doit.domain.user.dto.response.LoginResponseDto;
 import com.choi.doit.domain.user.exception.UserErrorCode;
-import com.choi.doit.domain.user.vo.OAuthUserInfoDto;
 import com.choi.doit.global.error.exception.RestApiException;
 import com.choi.doit.global.oauth2.GoogleOAuth;
 import com.choi.doit.global.util.RandomUtil;
@@ -92,7 +92,7 @@ public class LoginService {
         // JWT token
         LoginResponseDto loginResponseDto = jwtUtil.generateTokens(user);
 
-        return new GuestLoginResponseDto(loginResponseDto.getUser_id(), email, loginResponseDto.getAccess_token(), loginResponseDto.getRefresh_token());
+        return new GuestLoginResponseDto(loginResponseDto.getUserId(), email, loginResponseDto.getAccessToken(), loginResponseDto.getRefreshToken());
     }
 
     // 구글 로그인

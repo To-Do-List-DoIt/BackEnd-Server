@@ -1,4 +1,4 @@
-package com.choi.doit.domain.user.application.handler;
+package com.choi.doit.global.util.security.handler;
 
 import com.choi.doit.global.error.GlobalErrorCode;
 import com.choi.doit.global.error.exception.SpringSecurityException;
@@ -17,6 +17,6 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws SpringSecurityException, IOException {
-        responseUtil.setResponse(response, HttpServletResponse.SC_UNAUTHORIZED, GlobalErrorCode.AUTHENTICATION_FAILED.getMessage());
+        responseUtil.setResponse(response, HttpServletResponse.SC_UNAUTHORIZED, GlobalErrorCode.LOGIN_FAILED.getMessage());
     }
 }
