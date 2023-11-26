@@ -5,8 +5,6 @@ import com.choi.doit.domain.friend.dao.FriendRequestRepository;
 import com.choi.doit.domain.friend.domain.FriendEntity;
 import com.choi.doit.domain.friend.domain.FriendRequestEntity;
 import com.choi.doit.domain.friend.dto.FriendRequestDto;
-import com.choi.doit.domain.todo.dao.CategoryRepository;
-import com.choi.doit.domain.todo.dao.TodoRepository;
 import com.choi.doit.domain.user.dao.UserRepository;
 import com.choi.doit.domain.user.domain.UserEntity;
 import com.choi.doit.domain.user.dto.request.EmailJoinRequestDto;
@@ -43,12 +41,6 @@ class FriendApiTest {
 
     @Autowired
     private FriendRequestRepository friendRequestRepository;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private TodoRepository todoRepository;
 
     @Autowired
     private UserRepository userRepository;
